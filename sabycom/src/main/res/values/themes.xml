@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SabycomFullScreenDialog" parent="Widget.MaterialComponents.BottomSheet.Modal">
+<!--        <item name="behavior_skipCollapsed">true</item>-->
+<!--        <item name="behavior_fitToContents">true</item>-->
+        <item name="background">@android:color/transparent</item>
+    </style>
+</resources>
