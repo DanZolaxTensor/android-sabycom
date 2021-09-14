@@ -2,40 +2,33 @@ package ru.tenzor.sabycom
 
 import androidx.appcompat.app.AppCompatActivity
 import ru.tenzor.sabycom.data.UserData
-import ru.tenzor.sabycom.widget.SabycomController
+import ru.tenzor.sabycom.widget.SabycomFeature
 
 /**
+ * СБИС онлайн консультант.
  * @author ma.kolpakov
  */
 object Sabycom {
     //region widget
 
-    private var sabycomController: SabycomController? = null
+    private var sabycomFeature: SabycomFeature? = null
 
     /**
      * Инициализация компонента предпочтительно вызывать в onCreate вашего Application класса
      * @param apiKey - API Ключ приложения
      */
     fun initialize(apiKey: String) {
-        sabycomController = SabycomController(apiKey)
+        sabycomFeature = SabycomFeature(apiKey)
     }
 
     /**
-     * Добавить информацию о пользователе. Метод должен быть вызван до [preLoad] и [show]. Метод необходимо вызывать
+     * Добавить информацию о пользователе. Метод должен быть вызван до [show]. Метод необходимо вызывать
      * даже если нет информации о пользователе, в таком случае необходимо передать только идентификатор
      * пользователя [UserData]
      */
     fun registerUser(userData: UserData) {
-        checkNotNull(sabycomController) { NOT_INIT_ERROR }.registerUser(userData)
-        sabycomController
-    }
-
-    /**
-     * Метод вызовет предварительную подгрузку веб виджета, позволяет избавиться от прогрузки в момент показа виджета
-     * @throws IllegalStateException - если метод был вызван до [initialize] или пользователь не был зарегистрирован методом [registerUser]
-     */
-    fun preLoad() {
-        checkNotNull(sabycomController) { NOT_INIT_ERROR }.preload()
+        checkNotNull(sabycomFeature) { NOT_INIT_ERROR }.registerUser(userData)
+        sabycomFeature
     }
 
     /**
@@ -43,14 +36,14 @@ object Sabycom {
      * @throws IllegalStateException - если метод был вызван до [initialize] или пользователь не был зарегистрирован методом [registerUser]
      */
     fun show(activity: AppCompatActivity) {
-        checkNotNull(sabycomController) { NOT_INIT_ERROR }.show(activity)
+        checkNotNull(sabycomFeature) { NOT_INIT_ERROR }.show(activity)
     }
 
     /**
      * Скрыть веб виджет
      */
     fun hide() {
-        checkNotNull(sabycomController) { NOT_INIT_ERROR }.hide()
+        checkNotNull(sabycomFeature) { NOT_INIT_ERROR }.hide()
     }
 
     /**
@@ -65,8 +58,13 @@ object Sabycom {
 
     //region push notification
 
-    fun isSabycomPushNotification() {}
-    fun handlePushNotification() {}
+    fun isSabycomPushNotification() {
+        // TODO: 14.09.2021
+    }
+
+    fun handlePushNotification() {
+        // TODO: 14.09.2021
+    }
 
     //endregion
 

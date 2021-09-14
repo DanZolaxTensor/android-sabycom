@@ -25,20 +25,25 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     var onClose: (() -> Unit)? = null
     private lateinit var binding: SabycomDialogBinding
     private lateinit var url: String
-    private var preloadedData: String? = null
-    private var userData: UserData? = null
+    private lateinit var userData: UserData
 
     companion object {
-        fun newInstance(url: String, preloadedData: String?, userData: UserData?): SabycomDialog {
+        fun newInstance(url: String, userData: UserData): SabycomDialog {
             return SabycomDialog().apply {
                 this.url = url
-                this.preloadedData = preloadedData
                 this.userData = userData
+                val arguments = getOrCreateArguments()
+                arguments.putString(ARG_URL,url)
+                arguments.putParcelable(ARG_USER_DATA,userData)
             }
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
+        url = getOrCreateArguments().getString(ARG_URL)!!
+        userData = getOrCreateArguments().getParcelable(ARG_USER_DATA)!!
+
         val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         bottomSheetDialog.setOnShowListener { dialog: DialogInterface ->
             val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(R.id.design_bottom_sheet)
@@ -61,15 +66,21 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = SabycomDialogBinding.inflate(inflater)
+
         prepareWebView(binding.webView)
 
-        if (preloadedData.isNullOrEmpty()) {
-            binding.webView.loadUrl(url)
-        } else {
-            binding.webView.loadDataWithBaseURL(url, preloadedData!!, "text/html", Charsets.UTF_8.name(), null)
-        }
+        binding.webView.loadUrl(url, createHeaders(userData))
 
         return binding.root
+    }
+
+    private fun createHeaders(userData: UserData): MutableMap<String, String> {
+        val headers = mutableMapOf("id" to userData.id.toString())
+        headers.putIfNotNull("name", userData.name)
+        headers.putIfNotNull("surname", userData.surname)
+        headers.putIfNotNull("email", userData.email)
+        headers.putIfNotNull("phone", userData.phone)
+        return headers
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -82,5 +93,15 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
         webView.settings.javaScriptEnabled = true
         return webView
     }
-
+    private fun getOrCreateArguments(): Bundle {
+        if (arguments == null) {
+            arguments = Bundle()
+        }
+        return arguments as Bundle
+    }
+    private fun MutableMap<String, String>.putIfNotNull(key: String, value: String?) {
+        if (value != null) this[key] = value
+    }
 }
+private const val ARG_URL = "URL"
+private const val ARG_USER_DATA = "USER_DATA"
