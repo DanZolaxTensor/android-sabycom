@@ -9,7 +9,6 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.concurrent.Executors
-import kotlin.concurrent.thread
 
 /**
  * @author ma.kolpakov
@@ -21,11 +20,13 @@ internal class SabycomController(apiKey: String) {
     private var preloadedData: String? = null
     private var userData: UserData? = null
     fun preload() {
+        checkNotNull(userData) { NO_USER_DATA_ERROR }
         saveUrlData()
     }
 
     private val mSingleThreadExecutor = Executors.newSingleThreadExecutor()
     fun show(activity: AppCompatActivity) {
+        checkNotNull(userData) { NO_USER_DATA_ERROR }
         sabycomDialog = SabycomDialog.newInstance(urlString, preloadedData, userData)
         sabycomDialog?.show(activity.supportFragmentManager, SABYCOM_TAG)
     }
@@ -69,3 +70,4 @@ internal class SabycomController(apiKey: String) {
 }
 
 private const val SABYCOM_TAG = "Sabycom"
+private const val NO_USER_DATA_ERROR = "Sabycom"

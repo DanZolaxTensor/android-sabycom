@@ -2,26 +2,17 @@ package ru.tenzor.sabycom.widget
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
-import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.webkit.CookieManager
 import android.webkit.WebView
 import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat.Type.systemBars
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.internal.ViewUtils.doOnApplyWindowInsets
 import ru.tenzor.sabycom.R
 import ru.tenzor.sabycom.data.UserData
 import ru.tenzor.sabycom.databinding.SabycomDialogBinding
@@ -30,7 +21,7 @@ import ru.tenzor.sabycom.databinding.SabycomDialogBinding
 /**
  * @author ma.kolpakov
  */
-class SabycomDialog : BottomSheetDialogFragment() {
+internal class SabycomDialog : BottomSheetDialogFragment() {
     var onClose: (() -> Unit)? = null
     private lateinit var binding: SabycomDialogBinding
     private lateinit var url: String

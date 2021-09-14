@@ -19,14 +19,10 @@ class SabycomDemoActivity : AppCompatActivity() {
         val binding = ActivitySabycomDemoBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        WindowCompat.setDecorFitsSystemWindows(window!!, false)
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            insets
-        }
-
         Sabycom.registerUser(UserData(UUID.randomUUID()))
+
         Sabycom.preLoad()
+
         binding.showSabycom.setOnClickListener {
             Sabycom.show(this)
         }

@@ -13,7 +13,7 @@ class DemoViewModel : ViewModel() {
     val messageCounter: LiveData<Int> = _messageCounter
 
     init {
-        Sabycom.subscribeToUnreadMessage {
+        Sabycom.unreadConversationCount {
             _messageCounter.value = it
         }
     }

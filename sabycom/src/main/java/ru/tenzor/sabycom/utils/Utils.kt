@@ -4,6 +4,9 @@ package ru.tenzor.sabycom.utils
  * @author ma.kolpakov
  */
 
+/**
+ * Метод объединяет ранее сохраненные куки с новыми
+ */
 internal fun mergeCookies(oldCookie: String?, newCookie: String): String {
     if (oldCookie.isNullOrEmpty()) return newCookie
     val oldCookies = oldCookie.split(COOKIE_SEPARATOR).toMutableList()
@@ -19,5 +22,5 @@ internal fun mergeCookies(oldCookie: String?, newCookie: String): String {
     return oldCookies.joinToString(COOKIE_SEPARATOR)
 }
 
-private const val COOKIE_SEPARATOR = "; "
+private const val COOKIE_SEPARATOR = ";"
 private const val COOKIE_EQUALS = "="

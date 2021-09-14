@@ -12,28 +12,54 @@ object Sabycom {
 
     private var sabycomController: SabycomController? = null
 
+    /**
+     * Инициализация компонента предпочтительно вызывать в onCreate вашего Application класса
+     * @param apiKey - API Ключ приложения
+     */
     fun initialize(apiKey: String) {
         sabycomController = SabycomController(apiKey)
     }
 
-    fun preLoad() {
-        checkNotNull(sabycomController) { NOT_INIT_ERROR }.preload()
-    }
-
-    fun show(activity: AppCompatActivity) {
-        checkNotNull(sabycomController) { NOT_INIT_ERROR }.show(activity)
-    }
-
-    fun hide() {
-        checkNotNull(sabycomController) { NOT_INIT_ERROR }.hide()
-    }
-
+    /**
+     * Добавить информацию о пользователе. Метод должен быть вызван до [preLoad] и [show]. Метод необходимо вызывать
+     * даже если нет информации о пользователе, в таком случае необходимо передать только идентификатор
+     * пользователя [UserData]
+     */
     fun registerUser(userData: UserData) {
         checkNotNull(sabycomController) { NOT_INIT_ERROR }.registerUser(userData)
         sabycomController
     }
 
-    fun subscribeToUnreadMessage(callback: (Int) -> Unit) {}
+    /**
+     * Метод вызовет предварительную подгрузку веб виджета, позволяет избавиться от прогрузки в момент показа виджета
+     * @throws IllegalStateException - если метод был вызван до [initialize] или пользователь не был зарегистрирован методом [registerUser]
+     */
+    fun preLoad() {
+        checkNotNull(sabycomController) { NOT_INIT_ERROR }.preload()
+    }
+
+    /**
+     * Показать веб виджет
+     * @throws IllegalStateException - если метод был вызван до [initialize] или пользователь не был зарегистрирован методом [registerUser]
+     */
+    fun show(activity: AppCompatActivity) {
+        checkNotNull(sabycomController) { NOT_INIT_ERROR }.show(activity)
+    }
+
+    /**
+     * Скрыть веб виджет
+     */
+    fun hide() {
+        checkNotNull(sabycomController) { NOT_INIT_ERROR }.hide()
+    }
+
+    /**
+     * Запросить количество непрочитанных сообщений асинхронно.
+     * @param callback обратный вызов с результатом запроса
+     */
+    fun unreadConversationCount(callback: (Int) -> Unit) {
+        // TODO: 14.09.2021 реализовать запрос количества непрочитанных сообщений https://online.sbis.ru/opendoc.html?guid=3966a770-62ae-4965-a6aa-732aea72b57c
+    }
 
     //endregion
 
