@@ -1,4 +1,4 @@
-package ru.tenzor.sabycom.widget
+package ru.tensor.sabycom.widget
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -10,12 +10,14 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.WebView
 import android.widget.FrameLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.updateLayoutParams
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import ru.tenzor.sabycom.R
-import ru.tenzor.sabycom.data.UserData
-import ru.tenzor.sabycom.databinding.SabycomDialogBinding
+import ru.tensor.sabycom.R
+import ru.tensor.sabycom.data.UserData
+import ru.tensor.sabycom.databinding.SabycomDialogBinding
 
 
 /**
@@ -30,38 +32,38 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     companion object {
         fun newInstance(url: String, userData: UserData): SabycomDialog {
             return SabycomDialog().apply {
+                val arguments = Bundle().apply {
+                    arguments = this
+                }
                 this.url = url
                 this.userData = userData
-                val arguments = getOrCreateArguments()
-                arguments.putString(ARG_URL,url)
-                arguments.putParcelable(ARG_USER_DATA,userData)
+                arguments.putString(ARG_URL, url)
+                arguments.putParcelable(ARG_USER_DATA, userData)
             }
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        with(requireArguments()) {
+            url = getString(ARG_URL)!!
+            userData = getParcelable(ARG_USER_DATA)!!
+        }
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-
-        url = getOrCreateArguments().getString(ARG_URL)!!
-        userData = getOrCreateArguments().getParcelable(ARG_USER_DATA)!!
-
         val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         bottomSheetDialog.setOnShowListener { dialog: DialogInterface ->
             val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(R.id.design_bottom_sheet)
             bottomSheet?.let { it ->
                 val behaviour = BottomSheetBehavior.from(it)
-                setupFullHeight(it)
+                it.updateLayoutParams<CoordinatorLayout.LayoutParams> { height = CoordinatorLayout.LayoutParams.MATCH_PARENT }
                 behaviour.state = BottomSheetBehavior.STATE_EXPANDED
             }
             val bottomSheetBehavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet as View)
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
         }
         return bottomSheetDialog
-    }
-
-    private fun setupFullHeight(bottomSheet: View) {
-        val layoutParams = bottomSheet.layoutParams
-        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT
-        bottomSheet.layoutParams = layoutParams
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -87,21 +89,17 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
         super.onCancel(dialog)
         onClose?.invoke()
     }
-
+    // Можно использовать JavaScript так как мы загружаем только наш веб-виджет
     @SuppressLint("SetJavaScriptEnabled")
     private fun prepareWebView(webView: WebView): WebView {
         webView.settings.javaScriptEnabled = true
         return webView
     }
-    private fun getOrCreateArguments(): Bundle {
-        if (arguments == null) {
-            arguments = Bundle()
-        }
-        return arguments as Bundle
-    }
+
     private fun MutableMap<String, String>.putIfNotNull(key: String, value: String?) {
         if (value != null) this[key] = value
     }
 }
+
 private const val ARG_URL = "URL"
 private const val ARG_USER_DATA = "USER_DATA"

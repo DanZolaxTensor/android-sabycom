@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">SabycomDemo</string>
+    <string name="app_name" translatable="false">SabycomDemo</string>
+    <string name="sabycom_button_text" translatable="false">Sabycom</string>
 </resources>

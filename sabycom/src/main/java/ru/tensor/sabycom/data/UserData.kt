@@ -1,4 +1,4 @@
-package ru.tenzor.sabycom.data
+package ru.tensor.sabycom.data
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

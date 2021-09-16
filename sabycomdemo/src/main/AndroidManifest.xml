@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.tenzor.sabycomdemo">
+    package="ru.tensor.sabycomdemo">
 
     <application
-        android:name=".SabycomApp"
+        android:name="ru.tensor.sabycomdemo.SabycomApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sabycom">
-        <activity android:name=".SabycomDemoActivity">
+        <activity android:name="ru.tensor.sabycomdemo.SabycomDemoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

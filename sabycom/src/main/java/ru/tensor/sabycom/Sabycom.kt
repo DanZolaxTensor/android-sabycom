@@ -1,8 +1,8 @@
-package ru.tenzor.sabycom
+package ru.tensor.sabycom
 
 import androidx.appcompat.app.AppCompatActivity
-import ru.tenzor.sabycom.data.UserData
-import ru.tenzor.sabycom.widget.SabycomFeature
+import ru.tensor.sabycom.data.UserData
+import ru.tensor.sabycom.widget.SabycomFeature
 
 /**
  * СБИС онлайн консультант.
@@ -18,6 +18,8 @@ object Sabycom {
      * @param apiKey - API Ключ приложения
      */
     fun initialize(apiKey: String) {
+        check(sabycomFeature == null) { "Sabycom already initialized" }
+
         sabycomFeature = SabycomFeature(apiKey)
     }
 
@@ -28,7 +30,6 @@ object Sabycom {
      */
     fun registerUser(userData: UserData) {
         checkNotNull(sabycomFeature) { NOT_INIT_ERROR }.registerUser(userData)
-        sabycomFeature
     }
 
     /**
@@ -68,7 +69,6 @@ object Sabycom {
 
     //endregion
 
+    private const val NOT_INIT_ERROR =
+        "Before using Sabycom, it is necessary to initialize in the Application class [Sabycom.initialize(<API key>)]"
 }
-
-private const val NOT_INIT_ERROR =
-    "Before using Sabycom, it is necessary to initialize in the Application class [Sabycom.initialize(<API key>)]"

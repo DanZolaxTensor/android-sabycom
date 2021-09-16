@@ -1,7 +1,7 @@
-package ru.tenzor.sabycomdemo
+package ru.tensor.sabycomdemo
 
 import android.app.Application
-import ru.tenzor.sabycom.Sabycom
+import ru.tensor.sabycom.Sabycom
 
 /**
  * @author ma.kolpakov
