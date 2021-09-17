@@ -32,13 +32,11 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     companion object {
         fun newInstance(url: String, userData: UserData): SabycomDialog {
             return SabycomDialog().apply {
-                val arguments = Bundle().apply {
-                    arguments = this
-                }
+                arguments = Bundle()
                 this.url = url
                 this.userData = userData
-                arguments.putString(ARG_URL, url)
-                arguments.putParcelable(ARG_USER_DATA, userData)
+                requireArguments().putString(ARG_URL, url)
+                requireArguments().putParcelable(ARG_USER_DATA, userData)
             }
         }
     }
@@ -67,6 +65,9 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        // TODO: 17.09.2021 перейти на использование WindowInsets 
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
         binding = SabycomDialogBinding.inflate(inflater)
 
         prepareWebView(binding.webView)
