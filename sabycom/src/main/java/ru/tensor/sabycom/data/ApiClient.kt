@@ -12,8 +12,7 @@ import javax.net.ssl.HttpsURLConnection
 @WorkerThread
 internal object ApiClient {
 
-    private const val API_URL =
-        "https://pre-test-consultant.sbis.ru/service/restapi/" // TODO 29.09.2021 настраиваемый gradle url
+    private const val API_URL = UrlUtil.HOST_URL.plus("service/restapi/")
     private const val CONNECT_TIMEOUT = 10_000 // 10 sec
     private const val READ_TIMEOUT = CONNECT_TIMEOUT
 
