@@ -6,13 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import ru.tensor.sabycom.data.UserData
+import ru.tensor.sabycom.widget.repository.RemoteRepository
 
 /**
  * @author ma.kolpakov
  */
-internal class SabycomFeature(apiKey: String) {
+internal class SabycomFeature(
+    private val apiKey: String,
+    private val repository: RemoteRepository
+) {
 
-    private val urlString = "https://test-consultant.sbis.ru/consultant/$apiKey"
+    private val urlString = "https://pre-test-consultant.sbis.ru/consultant/$apiKey"
     private val hideEvent = MutableLiveData<Unit>()
     private var userData: UserData? = null
 
@@ -32,6 +36,7 @@ internal class SabycomFeature(apiKey: String) {
 
     fun registerUser(userData: UserData) {
         this.userData = userData
+        repository.registerUser(userData, apiKey)
     }
 
     private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {

@@ -1,26 +1,33 @@
 package ru.tensor.sabycom
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import ru.tensor.sabycom.data.UserData
+import ru.tensor.sabycom.push.PushNotificationCenter
+import ru.tensor.sabycom.push.SabycomPushService
 import ru.tensor.sabycom.widget.SabycomFeature
+import ru.tensor.sabycom.widget.repository.SabycomRemoteRepository
 
 /**
  * СБИС онлайн консультант.
  * @author ma.kolpakov
  */
-object Sabycom {
+object Sabycom : SabycomPushService {
     //region widget
 
     private var sabycomFeature: SabycomFeature? = null
+    private var pushService: SabycomPushService? = null
+    private val repository = SabycomRemoteRepository()
 
     /**
      * Инициализация компонента предпочтительно вызывать в onCreate вашего Application класса
+     * @param context - контекст приложения
      * @param apiKey - API Ключ приложения
      */
-    fun initialize(apiKey: String) {
-        check(sabycomFeature == null) { "Sabycom already initialized" }
-
-        sabycomFeature = SabycomFeature(apiKey)
+    fun initialize(context: Context, apiKey: String) {
+        check(sabycomFeature == null && pushService == null) { "Sabycom already initialized" }
+        sabycomFeature = SabycomFeature(apiKey, repository)
+        pushService = PushNotificationCenter(context, repository)
     }
 
     /**
@@ -59,12 +66,16 @@ object Sabycom {
 
     //region push notification
 
-    fun isSabycomPushNotification() {
-        // TODO: 14.09.2021
+    override fun isSabycomPushNotification(payload: Map<String, String>): Boolean {
+        return checkNotNull(pushService) { NOT_INIT_ERROR }.isSabycomPushNotification(payload)
     }
 
-    fun handlePushNotification() {
-        // TODO: 14.09.2021
+    override fun handlePushNotification(payload: Map<String, String>) {
+        checkNotNull(pushService) { NOT_INIT_ERROR }.handlePushNotification(payload)
+    }
+
+    override fun sendToken(token: String) {
+        checkNotNull(pushService) { NOT_INIT_ERROR }.sendToken(token)
     }
 
     //endregion
