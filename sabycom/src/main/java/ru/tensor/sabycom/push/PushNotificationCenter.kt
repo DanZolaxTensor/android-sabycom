@@ -56,7 +56,7 @@ internal class PushNotificationCenter(
             handler.post {
                 managerProvider.get().notify("TAG", 0, notification.build()) // TODO tag & id
             }
-        } ?: throw UnknownPushNotificationTypeException()
+        }
     }
 
     override fun sendToken(token: String) {

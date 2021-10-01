@@ -22,7 +22,7 @@ internal class PushNotificationMessage(
     val text: String,
     val type: PushType,
     val sendTime: Long,
-    val addresseeId: Long,
-    val action: Int,
+    val addresseeId: String,
+    val action: PushCloudAction,
     val data: JSONObject
 )

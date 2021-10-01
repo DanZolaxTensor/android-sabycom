@@ -28,7 +28,7 @@ internal class SabycomPushNotification(
     private fun NotificationCompat.Builder.configureDefault() {
         // design
         // setColor(ContextCompat.getColor(context)) TODO 30.09.2021 установить иконки виджета, либо использовать иконки приложения
-        // setSmallIcon()
+        setSmallIcon(android.R.drawable.ic_dialog_info)
 
         // rules
         setAutoCancel(true)

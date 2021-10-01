@@ -45,6 +45,7 @@ internal class SabycomRemoteRepository : RemoteRepository {
             put("email", user.email)
             put("phone", user.phone)
             put("push_token", token)
+            put("push_os", "android")
         }
         ApiClient.put("externalUser/${user.id}/$apiKey", data, object : ApiClient.ResultCallback {
             override fun onSuccess(result: JSONObject) {
