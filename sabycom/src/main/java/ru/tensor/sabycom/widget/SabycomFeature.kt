@@ -5,25 +5,33 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import ru.tensor.sabycom.data.UrlUtil
 import ru.tensor.sabycom.data.UserData
+import ru.tensor.sabycom.widget.repository.RemoteRepository
 
 /**
  * @author ma.kolpakov
  */
-internal class SabycomFeature(apiKey: String) {
+internal class SabycomFeature(
+    private val apiKey: String,
+    private val repository: RemoteRepository
+) {
 
-    private val urlString = "https://test-consultant.sbis.ru/consultant/$apiKey"
     private val hideEvent = MutableLiveData<Unit>()
     private var userData: UserData? = null
 
     fun show(activity: AppCompatActivity) {
-        val sabycomDialog = SabycomDialog.newInstance(urlString, checkNotNull(userData) { NO_USER_DATA_ERROR })
+        userData?.let { user ->
+            val dialog = SabycomDialog.newInstance(
+                UrlUtil.buildWidgetUrl(userId = user.id.toString(), apiKey = apiKey),
+                checkNotNull(userData) { NO_USER_DATA_ERROR })
 
-        hideEvent.observeOnce(activity) {
-            sabycomDialog.dismiss()
+            hideEvent.observeOnce(activity) {
+                dialog.dismiss()
+            }
+
+            dialog.show(activity.supportFragmentManager, SABYCOM_TAG)
         }
-
-        sabycomDialog.show(activity.supportFragmentManager, SABYCOM_TAG)
     }
 
     fun hide() {
@@ -32,6 +40,7 @@ internal class SabycomFeature(apiKey: String) {
 
     fun registerUser(userData: UserData) {
         this.userData = userData
+        repository.registerUser(userData, apiKey)
     }
 
     private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
@@ -42,6 +51,7 @@ internal class SabycomFeature(apiKey: String) {
             }
         })
     }
+
 }
 
 private const val SABYCOM_TAG = "Sabycom"
