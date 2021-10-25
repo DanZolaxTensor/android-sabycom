@@ -24,7 +24,6 @@ import ru.tensor.sabycom.databinding.SabycomDialogBinding
  * @author ma.kolpakov
  */
 internal class SabycomDialog : BottomSheetDialogFragment() {
-    var onClose: (() -> Unit)? = null
     private lateinit var binding: SabycomDialogBinding
     private lateinit var url: String
     private lateinit var userData: UserData
@@ -88,7 +87,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        onClose?.invoke()
+        requireActivity().onBackPressed()
     }
     // Можно использовать JavaScript так как мы загружаем только наш веб-виджет
     @SuppressLint("SetJavaScriptEnabled")

@@ -17,12 +17,7 @@ class SabycomDemoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivitySabycomDemoBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
-
         binding.showSabycom.setOnClickListener {
-            viewModel.showWidget()
-        }
-
-        viewModel.showEvent.observe(this) {
             Sabycom.show(this)
         }
 

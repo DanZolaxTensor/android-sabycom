@@ -15,9 +15,9 @@ import ru.tensor.sabycom.widget.repository.SabycomRemoteRepository
 object Sabycom : SabycomPushService {
     //region widget
 
-    private var sabycomFeature: SabycomFeature? = null
     private var pushService: SabycomPushService? = null
-    private val repository = SabycomRemoteRepository()
+    internal var sabycomFeature: SabycomFeature? = null
+    internal val repository = SabycomRemoteRepository()
 
     /**
      * Инициализация компонента предпочтительно вызывать в onCreate вашего Application класса
@@ -80,6 +80,6 @@ object Sabycom : SabycomPushService {
 
     //endregion
 
-    private const val NOT_INIT_ERROR =
+    internal const val NOT_INIT_ERROR =
         "Before using Sabycom, it is necessary to initialize in the Application class [Sabycom.initialize(<API key>)]"
 }
