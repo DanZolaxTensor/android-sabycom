@@ -19,7 +19,14 @@ internal class MessagePushNotificationBuilder(
             setContentTitle(message.title)
             setContentText(message.text)
             setStyle(NotificationCompat.BigTextStyle().bigText(message.text))
-            setContentIntent(PendingIntent.getActivity(context,0,SabycomActivity.getIntent(context),PendingIntent.FLAG_UPDATE_CURRENT))
+            setContentIntent(
+                PendingIntent.getActivity(
+                    context,
+                    0,
+                    SabycomActivity.createIntent(context),
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            )
         }
     }
 

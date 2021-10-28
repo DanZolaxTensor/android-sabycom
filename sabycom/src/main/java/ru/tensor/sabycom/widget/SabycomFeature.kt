@@ -15,7 +15,7 @@ internal class SabycomFeature(
     internal var onClose: (() -> Unit)? = null
 
     fun show(activity: AppCompatActivity) {
-        activity.startActivity(SabycomActivity.getIntent(activity))
+        activity.startActivity(SabycomActivity.createIntent(activity))
     }
 
     fun hide() {
