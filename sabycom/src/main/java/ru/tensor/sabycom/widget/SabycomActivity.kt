@@ -32,12 +32,12 @@ internal class SabycomActivity : AppCompatActivity() {
 
     internal companion object {
         /**
-         * етод предоставляет интетнт для открытия активити с виджетом онлайн консультации
+         * Метод предоставляет интетнт для открытия активити с виджетом онлайн консультации
          */
         fun createIntent(context: Context): Intent {
             return Intent(context, SabycomActivity::class.java)
         }
 
-        private const val SABYCOM_DIALOG_FRAGMENT_TAG = "Sabycom"
+        private const val SABYCOM_DIALOG_FRAGMENT_TAG = "SabycomDialogFragmentTag"
     }
 }
