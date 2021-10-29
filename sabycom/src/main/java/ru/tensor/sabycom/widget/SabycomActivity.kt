@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
  * @author ma.kolpakov
  */
 internal class SabycomActivity : AppCompatActivity() {
-    private lateinit var dialog: SabycomDialog
     private val viewModel: SabycomActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,11 +19,11 @@ internal class SabycomActivity : AppCompatActivity() {
             when (state) {
                 is Opened -> {
                     if (supportFragmentManager.findFragmentByTag(SABYCOM_DIALOG_FRAGMENT_TAG) != null) return@observe
-                    dialog = SabycomDialog.newInstance(state.url, state.userData)
-                    dialog.show(supportFragmentManager, SABYCOM_DIALOG_FRAGMENT_TAG)
+                    SabycomDialog.newInstance(state.url, state.userData)
+                        .show(supportFragmentManager, SABYCOM_DIALOG_FRAGMENT_TAG)
                 }
                 is Closed -> {
-                    dialog.dismiss()
+                    onBackPressed()
                 }
             }
         }
@@ -32,7 +31,7 @@ internal class SabycomActivity : AppCompatActivity() {
 
     internal companion object {
         /**
-         * Метод предоставляет интетнт для открытия активити с виджетом онлайн консультации
+         * Метод предоставляет интент для открытия активити с виджетом онлайн консультации
          */
         fun createIntent(context: Context): Intent {
             return Intent(context, SabycomActivity::class.java)
