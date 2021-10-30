@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import ru.tensor.sabycom.Sabycom
 import ru.tensor.sabycom.Sabycom.NOT_INIT_ERROR
 import ru.tensor.sabycom.data.UrlUtil
+import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.widget.repository.RemoteRepository
 
 /**
@@ -13,11 +14,13 @@ import ru.tensor.sabycom.widget.repository.RemoteRepository
  */
 internal class SabycomActivityViewModel(private val repository: RemoteRepository = Sabycom.repository) : ViewModel() {
 
-    private val stateLiveData = MutableLiveData<WebWidgetState>()
-    val state: LiveData<WebWidgetState> = stateLiveData
+    private val openEventLiveData = MutableLiveData<OpenWidgetData>()
+    val openEvent: LiveData<OpenWidgetData> = openEventLiveData
+    private val closeEventLiveData = MutableLiveData<Unit>()
+    val closeEvent: LiveData<Unit> = closeEventLiveData
 
     init {
-        stateLiveData.value = Opened(
+        openEventLiveData.value = OpenWidgetData(
             UrlUtil.buildWidgetUrl(
                 userId = getUser().id.toString(),
                 apiKey = getApiKey()
@@ -25,7 +28,7 @@ internal class SabycomActivityViewModel(private val repository: RemoteRepository
             getUser()
         )
         Sabycom.sabycomFeature?.onClose = {
-            stateLiveData.value = Closed
+            closeEventLiveData.value = Unit
         }
     }
 
@@ -41,4 +44,6 @@ internal class SabycomActivityViewModel(private val repository: RemoteRepository
         private const val NO_USER_DATA_ERROR =
             "Before showing widget, you need to register the user by calling method [Sabycom.registerUser(<user data>)]"
     }
+
+    internal data class OpenWidgetData(val url: String, val userData: UserData)
 }
