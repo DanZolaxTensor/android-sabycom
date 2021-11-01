@@ -1,5 +1,6 @@
 package ru.tensor.sabycom.widget
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,7 +29,7 @@ internal class SabycomActivityViewModel(private val repository: RemoteRepository
             getUser()
         )
         Sabycom.sabycomFeature?.onClose = {
-            closeEventLiveData.value = Unit
+            hide()
         }
     }
 
@@ -38,7 +39,12 @@ internal class SabycomActivityViewModel(private val repository: RemoteRepository
 
     private fun getUser() = checkNotNull(repository.registerData?.user) { NO_USER_DATA_ERROR }
 
-    private fun getApiKey() = checkNotNull(repository.registerData?.apiKey) { NOT_INIT_ERROR }
+    fun getApiKey() = checkNotNull(repository.registerData?.apiKey) { NOT_INIT_ERROR }
+
+    @MainThread
+    fun hide() {
+        closeEventLiveData.value = Unit
+    }
 
     companion object {
         private const val NO_USER_DATA_ERROR =

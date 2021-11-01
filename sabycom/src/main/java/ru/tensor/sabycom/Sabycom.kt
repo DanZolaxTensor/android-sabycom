@@ -6,6 +6,8 @@ import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.push.PushNotificationCenter
 import ru.tensor.sabycom.push.SabycomPushService
 import ru.tensor.sabycom.widget.SabycomFeature
+import ru.tensor.sabycom.widget.counter.UnreadCountController
+import ru.tensor.sabycom.widget.counter.UnreadCounterCallback
 import ru.tensor.sabycom.widget.repository.SabycomRemoteRepository
 
 /**
@@ -18,6 +20,7 @@ object Sabycom : SabycomPushService {
     private var pushService: SabycomPushService? = null
     internal var sabycomFeature: SabycomFeature? = null
     internal val repository = SabycomRemoteRepository()
+    internal val countController = UnreadCountController(repository)
 
     /**
      * Инициализация компонента предпочтительно вызывать в onCreate вашего Application класса
@@ -27,7 +30,7 @@ object Sabycom : SabycomPushService {
     fun initialize(context: Context, apiKey: String) {
         check(sabycomFeature == null && pushService == null) { "Sabycom already initialized" }
         sabycomFeature = SabycomFeature(apiKey, repository)
-        pushService = PushNotificationCenter(context, repository)
+        pushService = PushNotificationCenter(context, repository, countController)
     }
 
     /**
@@ -37,6 +40,8 @@ object Sabycom : SabycomPushService {
      */
     fun registerUser(userData: UserData) {
         checkNotNull(sabycomFeature) { NOT_INIT_ERROR }.registerUser(userData)
+        countController.requestCount()
+
     }
 
     /**
@@ -58,8 +63,8 @@ object Sabycom : SabycomPushService {
      * Запросить количество непрочитанных сообщений асинхронно.
      * @param callback обратный вызов с результатом запроса
      */
-    fun unreadConversationCount(callback: (Int) -> Unit) {
-        // TODO: 14.09.2021 реализовать запрос количества непрочитанных сообщений https://online.sbis.ru/opendoc.html?guid=3966a770-62ae-4965-a6aa-732aea72b57c
+    fun unreadConversationCount(callback: UnreadCounterCallback) {
+        countController.callback = callback
     }
 
     //endregion

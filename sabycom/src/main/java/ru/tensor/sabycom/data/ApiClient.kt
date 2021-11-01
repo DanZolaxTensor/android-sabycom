@@ -26,30 +26,41 @@ internal object ApiClient {
 
     fun put(path: String, params: JSONObject, callback: ResultCallback) {
         getConnection(API_URL.plus(path), "PUT").apply {
-            try {
-                doOutput = true
-                outputStream.bufferedWriter().use {
-                    it.write(params.toString())
-                    it.flush()
-                }
-                val response = inputStream.bufferedReader().use {
-                    JSONObject(it.readText())
-                }
-                if (responseCode == HttpsURLConnection.HTTP_OK) {
-                    callback.onSuccess(response)
-                } else {
-                    callback.onFailure(responseCode, response)
-                }
-            } catch (e: IOException) {
-                val errorBody = errorStream.bufferedReader().use {
-                    JSONObject(it.readText())
-                }
-                callback.onFailure(responseCode, errorBody)
-            } finally {
-                disconnect()
+            doOutput = true
+            outputStream.bufferedWriter().use {
+                it.write(params.toString())
+                it.flush()
             }
+            handleResponse(callback)
         }
     }
+
+    fun get(path: String, callback: ResultCallback) {
+        getConnection(API_URL.plus(path), "GET").apply {
+            handleResponse(callback)
+        }
+    }
+
+    private fun HttpsURLConnection.handleResponse(callback: ResultCallback) {
+        try {
+            val response = inputStream.bufferedReader().use {
+                JSONObject(it.readText())
+            }
+            if (responseCode == HttpsURLConnection.HTTP_OK) {
+                callback.onSuccess(response)
+            } else {
+                callback.onFailure(responseCode, response)
+            }
+        } catch (e: IOException) {
+            val errorBody = errorStream.bufferedReader().use {
+                JSONObject(it.readText())
+            }
+            callback.onFailure(responseCode, errorBody)
+        } finally {
+            disconnect()
+        }
+    }
+
 
     private fun getConnection(url: String, type: String): HttpsURLConnection {
         return (URL(url).openConnection() as HttpsURLConnection).apply {

@@ -36,6 +36,22 @@ internal class SabycomRemoteRepository : RemoteRepository {
         }
     }
 
+    override fun getUnreadMessageCount(callback: (Int) -> Unit) {
+        executor.submit {
+            val data = requireNotNull(registerData)
+            ApiClient.get("externalUser/${data.user?.id}/${data.apiKey}/unread/${data.apiKey}",
+                object : ApiClient.ResultCallback {
+                    override fun onSuccess(result: JSONObject) {
+                        callback(result.getJSONObject("result").getInt("count"))
+                    }
+
+                    override fun onFailure(code: Int, errorBody: JSONObject) {
+
+                    }
+                })
+        }
+    }
+
     private fun performRegisterSync(user: UserData, apiKey: String, token: String?) {
         val data = JSONObject().apply {
             put("id", user.id.toString())

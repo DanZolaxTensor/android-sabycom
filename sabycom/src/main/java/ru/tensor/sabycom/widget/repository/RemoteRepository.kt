@@ -11,6 +11,8 @@ internal interface RemoteRepository {
 
     fun registerUser(user: UserData, apiKey: String)
 
+    fun getUnreadMessageCount(callback: (Int) -> Unit)
+
     var registerData: SabycomRemoteRepository.RegisterData?
 
 }
