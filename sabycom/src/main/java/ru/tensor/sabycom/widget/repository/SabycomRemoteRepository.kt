@@ -13,7 +13,7 @@ import java.util.concurrent.Executors
 internal class SabycomRemoteRepository : RemoteRepository {
 
     private val executor by lazy { Executors.newSingleThreadExecutor() }
-    private var registerData: RegisterData? = null
+    override var registerData: RegisterData? = null
 
     override fun sendPushToken(token: String) {
         executor.submit {
@@ -58,7 +58,7 @@ internal class SabycomRemoteRepository : RemoteRepository {
         })
     }
 
-    private class RegisterData(
+    internal class RegisterData(
         val user: UserData? = null,
         val apiKey: String? = null,
         val token: String? = null

@@ -14,12 +14,9 @@ import java.util.UUID
  */
 class DemoViewModel(application: Application) : AndroidViewModel(application) {
     private val _messageCounter = MutableLiveData(0)
-    private val _showEvent = MutableLiveData<Unit>()
     val messageCounter: LiveData<Int> = _messageCounter
-    val showEvent: LiveData<Unit> = _showEvent
 
     init {
-
         val sharedPreferences = application.getSharedPreferences(SHARED_PREFERENCE_NAME, AppCompatActivity.MODE_PRIVATE)
 
         var stringUUID = sharedPreferences.getString(UUID_KEY, null)
@@ -37,9 +34,6 @@ class DemoViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun showWidget() {
-        _showEvent.value = Unit
-    }
 }
 
 private const val SHARED_PREFERENCE_NAME = "SabycomDemo"

@@ -10,4 +10,7 @@ internal interface RemoteRepository {
     fun sendPushToken(token: String)
 
     fun registerUser(user: UserData, apiKey: String)
+
+    var registerData: SabycomRemoteRepository.RegisterData?
+
 }
