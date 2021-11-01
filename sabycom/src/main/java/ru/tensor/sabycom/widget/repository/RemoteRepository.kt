@@ -7,12 +7,8 @@ import ru.tensor.sabycom.data.UserData
  */
 internal interface RemoteRepository {
 
-    fun sendPushToken(token: String)
+    fun performRegisterSync(apiKey: String, userData: UserData, token: String?)
 
-    fun registerUser(user: UserData, apiKey: String)
-
-    fun getUnreadMessageCount(callback: (Int) -> Unit)
-
-    var registerData: SabycomRemoteRepository.RegisterData?
+    fun getUnreadMessageCount(apiKey: String, userData: UserData, callback: (Int) -> Unit)
 
 }

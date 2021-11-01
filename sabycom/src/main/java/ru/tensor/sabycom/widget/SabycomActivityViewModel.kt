@@ -5,15 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.tensor.sabycom.Sabycom
-import ru.tensor.sabycom.Sabycom.NOT_INIT_ERROR
 import ru.tensor.sabycom.data.UrlUtil
 import ru.tensor.sabycom.data.UserData
-import ru.tensor.sabycom.widget.repository.RemoteRepository
+import ru.tensor.sabycom.widget.repository.Repository
 
 /**
  * @author ma.kolpakov
  */
-internal class SabycomActivityViewModel(private val repository: RemoteRepository = Sabycom.repository) : ViewModel() {
+internal class SabycomActivityViewModel(private val repository: Repository = Sabycom.repository) : ViewModel() {
 
     private val openEventLiveData = MutableLiveData<OpenWidgetData>()
     val openEvent: LiveData<OpenWidgetData> = openEventLiveData
@@ -23,10 +22,10 @@ internal class SabycomActivityViewModel(private val repository: RemoteRepository
     init {
         openEventLiveData.value = OpenWidgetData(
             UrlUtil.buildWidgetUrl(
-                userId = getUser().id.toString(),
-                apiKey = getApiKey()
+                userId = repository.getUserData().id.toString(),
+                apiKey = repository.getApiKey()
             ),
-            getUser()
+            repository.getUserData()
         )
         Sabycom.sabycomFeature?.onClose = {
             hide()
@@ -36,10 +35,6 @@ internal class SabycomActivityViewModel(private val repository: RemoteRepository
     override fun onCleared() {
         Sabycom.sabycomFeature?.onClose = null
     }
-
-    private fun getUser() = checkNotNull(repository.registerData?.user) { NO_USER_DATA_ERROR }
-
-    fun getApiKey() = checkNotNull(repository.registerData?.apiKey) { NOT_INIT_ERROR }
 
     @MainThread
     fun hide() {

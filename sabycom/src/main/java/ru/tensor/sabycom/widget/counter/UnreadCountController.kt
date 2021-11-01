@@ -2,9 +2,12 @@ package ru.tensor.sabycom.widget.counter
 
 import android.os.Handler
 import android.os.Looper
-import ru.tensor.sabycom.widget.repository.RemoteRepository
+import ru.tensor.sabycom.widget.repository.Repository
 
-internal class UnreadCountController(private val repository: RemoteRepository) : IUnreadCountController {
+/**
+ * @author ma.kolpakov
+ */
+internal class UnreadCountController(private val repository: Repository) : IUnreadCountController {
     private val handler = Handler(Looper.getMainLooper())
     override var callback: UnreadCounterCallback? = null
 

@@ -14,16 +14,16 @@ import ru.tensor.sabycom.push.manager.ToastNotificationManager
 import ru.tensor.sabycom.push.parser.PushNotificationParser
 import ru.tensor.sabycom.push.parser.SabycomPushNotificationParser
 import ru.tensor.sabycom.push.parser.data.PushType
-import ru.tensor.sabycom.widget.repository.RemoteRepository
 import ru.tensor.sabycom.push.util.NotificationChannelUtil
 import ru.tensor.sabycom.widget.counter.IUnreadCountController
+import ru.tensor.sabycom.widget.repository.Repository
 
 /**
  * @author am.boldinov
  */
 internal class PushNotificationCenter(
     private val context: Context,
-    private val repository: RemoteRepository,
+    private val repository: Repository,
     private val countController: IUnreadCountController,
     private val lifecycleTracker: AppLifecycleTracker,
     private val parser: PushNotificationParser
@@ -31,7 +31,7 @@ internal class PushNotificationCenter(
 
     constructor(
         context: Context,
-        repository: RemoteRepository,
+        repository: Repository,
         countController: IUnreadCountController
     ) : this(
         context,

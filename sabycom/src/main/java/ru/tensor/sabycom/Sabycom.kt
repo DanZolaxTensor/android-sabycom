@@ -8,10 +8,13 @@ import ru.tensor.sabycom.push.SabycomPushService
 import ru.tensor.sabycom.widget.SabycomFeature
 import ru.tensor.sabycom.widget.counter.UnreadCountController
 import ru.tensor.sabycom.widget.counter.UnreadCounterCallback
+import ru.tensor.sabycom.widget.repository.Repository
+import ru.tensor.sabycom.widget.repository.SabycomLocalRepository
 import ru.tensor.sabycom.widget.repository.SabycomRemoteRepository
 
 /**
  * СБИС онлайн консультант.
+ *
  * @author ma.kolpakov
  */
 object Sabycom : SabycomPushService {
@@ -19,8 +22,8 @@ object Sabycom : SabycomPushService {
 
     private var pushService: SabycomPushService? = null
     internal var sabycomFeature: SabycomFeature? = null
-    internal val repository = SabycomRemoteRepository()
-    internal val countController = UnreadCountController(repository)
+    internal lateinit var repository: Repository
+    internal lateinit var countController: UnreadCountController
 
     /**
      * Инициализация компонента предпочтительно вызывать в onCreate вашего Application класса
@@ -29,6 +32,8 @@ object Sabycom : SabycomPushService {
      */
     fun initialize(context: Context, apiKey: String) {
         check(sabycomFeature == null && pushService == null) { "Sabycom already initialized" }
+        repository = Repository(SabycomRemoteRepository(), SabycomLocalRepository(context))
+        countController = UnreadCountController(repository)
         sabycomFeature = SabycomFeature(apiKey, repository)
         pushService = PushNotificationCenter(context, repository, countController)
     }

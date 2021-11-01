@@ -6,40 +6,15 @@ import ru.tensor.sabycom.data.UserData
 import java.util.concurrent.Executors
 
 /**
- * TODO 29.09.21 переработать кеширование, сделано для тестирования работы
- *
  * @author am.boldinov
  */
 internal class SabycomRemoteRepository : RemoteRepository {
 
     private val executor by lazy { Executors.newSingleThreadExecutor() }
-    override var registerData: RegisterData? = null
 
-    override fun sendPushToken(token: String) {
+    override fun getUnreadMessageCount(apiKey: String, userData: UserData, callback: (Int) -> Unit) {
         executor.submit {
-            registerData = (registerData?.let {
-                RegisterData(it.user, it.apiKey, it.token)
-            } ?: RegisterData(token = token)).apply {
-                if (user != null && apiKey != null) {
-                    performRegisterSync(user, apiKey, token)
-                }
-            }
-        }
-    }
-
-    override fun registerUser(user: UserData, apiKey: String) {
-        executor.submit {
-            registerData = registerData?.let {
-                RegisterData(user, apiKey, it.token)
-            } ?: RegisterData(user, apiKey)
-            performRegisterSync(user, apiKey, registerData?.token)
-        }
-    }
-
-    override fun getUnreadMessageCount(callback: (Int) -> Unit) {
-        executor.submit {
-            val data = requireNotNull(registerData)
-            ApiClient.get("externalUser/${data.user?.id}/${data.apiKey}/unread/${data.apiKey}",
+            ApiClient.get("externalUser/${userData.id}/${apiKey}/unread/${apiKey}",
                 object : ApiClient.ResultCallback {
                     override fun onSuccess(result: JSONObject) {
                         callback(result.getJSONObject("result").getInt("count"))
@@ -52,31 +27,28 @@ internal class SabycomRemoteRepository : RemoteRepository {
         }
     }
 
-    private fun performRegisterSync(user: UserData, apiKey: String, token: String?) {
-        val data = JSONObject().apply {
-            put("id", user.id.toString())
-            put("service_id", apiKey)
-            put("name", user.name)
-            put("surname", user.surname)
-            put("email", user.email)
-            put("phone", user.phone)
-            put("push_token", token)
-            put("push_os", "android")
+    override fun performRegisterSync(apiKey: String, userData: UserData, token: String?) {
+        executor.submit {
+            val data = JSONObject().apply {
+                put("id", userData.id.toString())
+                put("service_id", apiKey)
+                put("name", userData.name)
+                put("surname", userData.surname)
+                put("email", userData.email)
+                put("phone", userData.phone)
+                put("push_token", token)
+                put("push_os", "android")
+            }
+            ApiClient.put("externalUser/${userData.id}/$apiKey", data, object : ApiClient.ResultCallback {
+                override fun onSuccess(result: JSONObject) {
+
+                }
+
+                override fun onFailure(code: Int, errorBody: JSONObject) {
+
+                }
+            })
         }
-        ApiClient.put("externalUser/${user.id}/$apiKey", data, object : ApiClient.ResultCallback {
-            override fun onSuccess(result: JSONObject) {
-
-            }
-
-            override fun onFailure(code: Int, errorBody: JSONObject) {
-
-            }
-        })
     }
 
-    internal class RegisterData(
-        val user: UserData? = null,
-        val apiKey: String? = null,
-        val token: String? = null
-    )
 }
