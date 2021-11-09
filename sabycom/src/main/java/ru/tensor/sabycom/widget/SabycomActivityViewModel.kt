@@ -12,7 +12,7 @@ import ru.tensor.sabycom.widget.repository.Repository
 /**
  * @author ma.kolpakov
  */
-internal class SabycomActivityViewModel(private val repository: Repository = Sabycom.repository) : ViewModel() {
+internal class SabycomActivityViewModel(repository: Repository = Sabycom.repository) : ViewModel() {
 
     private val openEventLiveData = MutableLiveData<OpenWidgetData>()
     val openEvent: LiveData<OpenWidgetData> = openEventLiveData
@@ -39,11 +39,6 @@ internal class SabycomActivityViewModel(private val repository: Repository = Sab
     @MainThread
     fun hide() {
         closeEventLiveData.value = Unit
-    }
-
-    companion object {
-        private const val NO_USER_DATA_ERROR =
-            "Before showing widget, you need to register the user by calling method [Sabycom.registerUser(<user data>)]"
     }
 
     internal data class OpenWidgetData(val url: String, val userData: UserData)

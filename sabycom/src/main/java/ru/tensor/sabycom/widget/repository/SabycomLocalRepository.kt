@@ -1,8 +1,6 @@
 package ru.tensor.sabycom.widget.repository
 
 import android.content.Context
-import android.content.SharedPreferences
-import ru.tensor.sabycom.Sabycom.NOT_INIT_ERROR
 import ru.tensor.sabycom.data.UserData
 import java.util.UUID
 
@@ -23,15 +21,15 @@ internal class SabycomLocalRepository(context: Context) : LocalRepository {
     override fun saveUser(user: UserData) {
         sharedPreferences.edit().apply {
             putString(USER_DATA_ID_KEY, user.id.toString())
-            putStringIfNotNul(USER_DATA_NAME_KEY, user.name)
-            putStringIfNotNul(USER_DATA_SURNAME_KEY, user.surname)
-            putStringIfNotNul(USER_DATA_EMAIL_KEY, user.email)
-            putStringIfNotNul(USER_DATA_PHONE_KEY, user.phone)
+            putString(USER_DATA_NAME_KEY, user.name)
+            putString(USER_DATA_SURNAME_KEY, user.surname)
+            putString(USER_DATA_EMAIL_KEY, user.email)
+            putString(USER_DATA_PHONE_KEY, user.phone)
         }.apply()
     }
 
-    override fun getUserData(): UserData {
-        val userId = sharedPreferences.getString(USER_DATA_ID_KEY, null) ?: throw IllegalStateException(NOT_INIT_ERROR)
+    override fun getUserData(): UserData? {
+        val userId = sharedPreferences.getString(USER_DATA_ID_KEY, null) ?: return null
         return UserData(
             UUID.fromString(userId),
             sharedPreferences.getString(USER_DATA_NAME_KEY, null),
@@ -47,9 +45,9 @@ internal class SabycomLocalRepository(context: Context) : LocalRepository {
         }.apply()
     }
 
-    override fun getApiKey() = requireNotNull(sharedPreferences.getString(API_KEY_KEY, null)) { NOT_INIT_ERROR }
+    override fun getApiKey() = sharedPreferences.getString(API_KEY_KEY, null)
 
-    companion object {
+    private companion object {
         private const val SHARED_PREFERENCES_NAME = "SabycomSharedPreferences"
         private const val API_KEY_KEY = "API_KEY"
         private const val TOKEN_KEY = "TOKEN"
@@ -61,8 +59,3 @@ internal class SabycomLocalRepository(context: Context) : LocalRepository {
     }
 }
 
-private fun SharedPreferences.Editor.putStringIfNotNul(key: String, value: String?) {
-    value?.let {
-        putString(key, it)
-    }
-}

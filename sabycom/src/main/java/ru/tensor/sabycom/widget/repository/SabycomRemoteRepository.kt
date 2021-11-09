@@ -1,5 +1,6 @@
 package ru.tensor.sabycom.widget.repository
 
+import android.util.Log
 import org.json.JSONObject
 import ru.tensor.sabycom.data.ApiClient
 import ru.tensor.sabycom.data.UserData
@@ -12,16 +13,25 @@ internal class SabycomRemoteRepository : RemoteRepository {
 
     private val executor by lazy { Executors.newSingleThreadExecutor() }
 
-    override fun getUnreadMessageCount(apiKey: String, userData: UserData, callback: (Int) -> Unit) {
+    override fun getUnreadMessageCount(
+        apiKey: String,
+        userData: UserData,
+        callback: (Int) -> Unit
+    ) {
         executor.submit {
-            ApiClient.get("externalUser/${userData.id}/${apiKey}/unread/${apiKey}",
+            val path = "externalUser/${userData.id}/${apiKey}/unread/${apiKey}"
+            ApiClient.get(
+                path,
                 object : ApiClient.ResultCallback {
                     override fun onSuccess(result: JSONObject) {
                         callback(result.getJSONObject("result").getInt("count"))
                     }
 
                     override fun onFailure(code: Int, errorBody: JSONObject) {
-
+                        Log.d(
+                            LOG_TAG,
+                            "Error in get request with path[$path]. Error code [$code]. Error message [$errorBody]"
+                        )
                     }
                 })
         }
@@ -39,16 +49,29 @@ internal class SabycomRemoteRepository : RemoteRepository {
                 put("push_token", token)
                 put("push_os", "android")
             }
-            ApiClient.put("externalUser/${userData.id}/$apiKey", data, object : ApiClient.ResultCallback {
-                override fun onSuccess(result: JSONObject) {
+            val path = "externalUser/${userData.id}/$apiKey"
+            ApiClient.put(
+                path,
+                data,
+                object : ApiClient.ResultCallback {
+                    override fun onSuccess(result: JSONObject) {
+                        Log.d(
+                            LOG_TAG,
+                            "Put request completed successfully with path path[$path]"
+                        )
+                    }
 
-                }
-
-                override fun onFailure(code: Int, errorBody: JSONObject) {
-
-                }
-            })
+                    override fun onFailure(code: Int, errorBody: JSONObject) {
+                        Log.d(
+                            LOG_TAG,
+                            "Error in put request with path[$path]. Error code [$code]. Error message [$errorBody]"
+                        )
+                    }
+                })
         }
     }
 
+    private companion object {
+        const val LOG_TAG = "SabycomRemoteRepository"
+    }
 }

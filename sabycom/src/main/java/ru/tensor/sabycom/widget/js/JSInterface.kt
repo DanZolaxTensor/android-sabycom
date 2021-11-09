@@ -6,11 +6,13 @@ import org.json.JSONObject
 import ru.tensor.sabycom.widget.counter.IUnreadCountController
 
 /**
- * Интерфей взаимодействия с JS кодом веб виджета. Обрабатывает события от виджета.
+ * Интерфейс взаимодействия с JS кодом веб виджета. Обрабатывает события от виджета.
  * @author ma.kolpakov
  */
-internal class JSInterface(private val countController: IUnreadCountController) {
-    var onCloseListener: OnJsCloseListener? = null
+internal class JSInterface(
+    private val countController: IUnreadCountController,
+    private val onCloseListener: OnJsCloseListener
+) {
 
     @JavascriptInterface
     fun postMessage(data: String, targetOrigin: String) {
@@ -18,7 +20,7 @@ internal class JSInterface(private val countController: IUnreadCountController) 
         when (dataJson.getString(ACTION)) {
             // Нажатие на кнопку зкарыть внутри виджета
             ACTION_CLOSE -> {
-                onCloseListener?.onClose()
+                onCloseListener.onClose()
             }
             // Изменение непрочитанных сообзений
             ACTION_UPDATE_UNREAD_MESSAGES -> {
@@ -28,17 +30,16 @@ internal class JSInterface(private val countController: IUnreadCountController) 
                 //do nothing
             }
         }
-        println(data)
     }
 
-    companion object {
+    private companion object {
         const val ACTION_CLOSE = "toggleWindow"
         const val ACTION_UPDATE_UNREAD_MESSAGES = "unreadChange"
         const val ACTION = "action"
         const val VALUE = "value"
     }
 
-    interface OnJsCloseListener {
+    fun interface OnJsCloseListener {
         @WorkerThread
         fun onClose()
     }

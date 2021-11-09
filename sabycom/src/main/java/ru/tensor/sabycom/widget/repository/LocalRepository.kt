@@ -10,6 +10,6 @@ internal interface LocalRepository {
     fun getPushToken(): String?
     fun saveUser(user: UserData)
     fun saveApiKey(apiKey: String)
-    fun getApiKey(): String
-    fun getUserData(): UserData
+    fun getApiKey(): String?
+    fun getUserData(): UserData?
 }

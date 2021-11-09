@@ -99,15 +99,14 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     // Можно использовать JavaScript так как мы загружаем только наш веб-виджет
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     private fun prepareWebView(webView: WebView): WebView {
-        webView.addJavascriptInterface(JSInterface(Sabycom.countController).apply {
-            onCloseListener = object : JSInterface.OnJsCloseListener {
-                override fun onClose() {
-                    requireActivity().runOnUiThread {
-                        viewModel.hide()
-                    }
+        webView.addJavascriptInterface(
+            JSInterface(Sabycom.countController) {
+                requireActivity().runOnUiThread {
+                    viewModel.hide()
                 }
-            }
-        }, "mobileParent")
+            },
+            "mobileParent"
+        )
 
         webView.settings.javaScriptEnabled = true
         return webView

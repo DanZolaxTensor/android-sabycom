@@ -1,5 +1,6 @@
 package ru.tensor.sabycom.widget.repository
 
+import ru.tensor.sabycom.Sabycom.NOT_INIT_ERROR
 import ru.tensor.sabycom.data.UserData
 
 /**
@@ -23,19 +24,24 @@ internal class Repository(
         localRepository.saveApiKey(apiKey)
     }
 
-    fun getUserData() = localRepository.getUserData()
+    fun getUserData() = requireNotNull(localRepository.getUserData()) { NOT_INIT_ERROR }
 
-    private fun syncUserData() {
+    fun getApiKey() = requireNotNull(localRepository.getApiKey()) { NOT_INIT_ERROR }
+
+    fun syncUserData() {
         remoteRepository.performRegisterSync(
-            localRepository.getApiKey(),
-            localRepository.getUserData(),
+            getApiKey(),
+            getUserData(),
             localRepository.getPushToken()
         )
     }
 
     fun getUnreadMessageCount(callback: (Int) -> Unit) {
-        remoteRepository.getUnreadMessageCount(localRepository.getApiKey(), localRepository.getUserData(), callback)
+        remoteRepository.getUnreadMessageCount(
+            getApiKey(),
+            getUserData(),
+            callback
+        )
     }
 
-    fun getApiKey() = localRepository.getApiKey()
 }
