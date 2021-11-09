@@ -14,25 +14,29 @@ import ru.tensor.sabycom.push.manager.ToastNotificationManager
 import ru.tensor.sabycom.push.parser.PushNotificationParser
 import ru.tensor.sabycom.push.parser.SabycomPushNotificationParser
 import ru.tensor.sabycom.push.parser.data.PushType
-import ru.tensor.sabycom.widget.repository.RemoteRepository
 import ru.tensor.sabycom.push.util.NotificationChannelUtil
+import ru.tensor.sabycom.widget.counter.IUnreadCountController
+import ru.tensor.sabycom.widget.repository.Repository
 
 /**
  * @author am.boldinov
  */
 internal class PushNotificationCenter(
     private val context: Context,
-    private val repository: RemoteRepository,
+    private val repository: Repository,
+    private val countController: IUnreadCountController,
     private val lifecycleTracker: AppLifecycleTracker,
     private val parser: PushNotificationParser
 ) : SabycomPushService {
 
     constructor(
         context: Context,
-        repository: RemoteRepository
+        repository: Repository,
+        countController: IUnreadCountController
     ) : this(
         context,
         repository,
+        countController,
         SabycomLifecycleTracker(context),
         SabycomPushNotificationParser()
     )
@@ -52,6 +56,7 @@ internal class PushNotificationCenter(
 
     override fun handlePushNotification(payload: Map<String, String>) {
         val message = parser.parse(payload)
+        countController.requestCount()
         pushBuilderMap[message.type]?.build(message)?.let { notification ->
             handler.post {
                 managerProvider.get().notify("TAG", 0, notification.build()) // TODO tag & id

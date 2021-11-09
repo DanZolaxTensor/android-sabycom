@@ -12,12 +12,15 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ru.tensor.sabycom.R
+import ru.tensor.sabycom.Sabycom
 import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.databinding.SabycomDialogBinding
+import ru.tensor.sabycom.widget.js.JSInterface
 
 
 /**
@@ -27,6 +30,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     private lateinit var binding: SabycomDialogBinding
     private lateinit var url: String
     private lateinit var userData: UserData
+    private val viewModel: SabycomActivityViewModel by activityViewModels()
 
     companion object {
         fun newInstance(url: String, userData: UserData): SabycomDialog {
@@ -54,7 +58,9 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
             val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(R.id.design_bottom_sheet)
             bottomSheet?.let { it ->
                 val behaviour = BottomSheetBehavior.from(it)
-                it.updateLayoutParams<CoordinatorLayout.LayoutParams> { height = CoordinatorLayout.LayoutParams.MATCH_PARENT }
+                it.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                    height = CoordinatorLayout.LayoutParams.MATCH_PARENT
+                }
                 behaviour.state = BottomSheetBehavior.STATE_EXPANDED
             }
             val bottomSheetBehavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet as View)
@@ -89,9 +95,19 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
         super.onCancel(dialog)
         requireActivity().onBackPressed()
     }
+
     // Можно использовать JavaScript так как мы загружаем только наш веб-виджет
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     private fun prepareWebView(webView: WebView): WebView {
+        webView.addJavascriptInterface(
+            JSInterface(Sabycom.countController) {
+                requireActivity().runOnUiThread {
+                    viewModel.hide()
+                }
+            },
+            "mobileParent"
+        )
+
         webView.settings.javaScriptEnabled = true
         return webView
     }
