@@ -7,14 +7,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import ru.tensor.sabycom.Sabycom
 import ru.tensor.sabycom.data.UserData
+import ru.tensor.sabycom.widget.counter.UnreadCounterCallback
 import java.util.UUID
 
 /**
  * @author ma.kolpakov
  */
 class DemoViewModel(application: Application) : AndroidViewModel(application) {
-    private val _messageCounter = MutableLiveData(0)
-    val messageCounter: LiveData<Int> = _messageCounter
+    private val messageCounterLiveData = MutableLiveData(0)
+    val messageCounter: LiveData<Int> = messageCounterLiveData
 
     init {
         val sharedPreferences = application.getSharedPreferences(SHARED_PREFERENCE_NAME, AppCompatActivity.MODE_PRIVATE)
@@ -29,9 +30,11 @@ class DemoViewModel(application: Application) : AndroidViewModel(application) {
 
         Sabycom.registerUser(UserData(UUID.fromString(stringUUID)))
 
-        Sabycom.unreadConversationCount {
-            _messageCounter.value = it
-        }
+        Sabycom.unreadConversationCount(object : UnreadCounterCallback {
+            override fun updateCount(count: Int) {
+                messageCounterLiveData.value = count
+            }
+        })
     }
 
 }

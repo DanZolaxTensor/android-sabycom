@@ -1,66 +1,77 @@
 package ru.tensor.sabycom.widget.repository
 
+import android.util.Log
 import org.json.JSONObject
 import ru.tensor.sabycom.data.ApiClient
 import ru.tensor.sabycom.data.UserData
 import java.util.concurrent.Executors
 
 /**
- * TODO 29.09.21 переработать кеширование, сделано для тестирования работы
- *
  * @author am.boldinov
  */
 internal class SabycomRemoteRepository : RemoteRepository {
 
     private val executor by lazy { Executors.newSingleThreadExecutor() }
-    override var registerData: RegisterData? = null
 
-    override fun sendPushToken(token: String) {
+    override fun getUnreadMessageCount(
+        apiKey: String,
+        userData: UserData,
+        callback: (Int) -> Unit
+    ) {
         executor.submit {
-            registerData = (registerData?.let {
-                RegisterData(it.user, it.apiKey, it.token)
-            } ?: RegisterData(token = token)).apply {
-                if (user != null && apiKey != null) {
-                    performRegisterSync(user, apiKey, token)
-                }
-            }
+            val path = "externalUser/${userData.id}/${apiKey}/unread/${apiKey}"
+            ApiClient.get(
+                path,
+                object : ApiClient.ResultCallback {
+                    override fun onSuccess(result: JSONObject) {
+                        callback(result.getJSONObject("result").getInt("count"))
+                    }
+
+                    override fun onFailure(code: Int, errorBody: JSONObject) {
+                        Log.d(
+                            LOG_TAG,
+                            "Error in get request with path[$path]. Error code [$code]. Error message [$errorBody]"
+                        )
+                    }
+                })
         }
     }
 
-    override fun registerUser(user: UserData, apiKey: String) {
+    override fun performRegisterSync(apiKey: String, userData: UserData, token: String?) {
         executor.submit {
-            registerData = registerData?.let {
-                RegisterData(user, apiKey, it.token)
-            } ?: RegisterData(user, apiKey)
-            performRegisterSync(user, apiKey, registerData?.token)
+            val data = JSONObject().apply {
+                put("id", userData.id.toString())
+                put("service_id", apiKey)
+                put("name", userData.name)
+                put("surname", userData.surname)
+                put("email", userData.email)
+                put("phone", userData.phone)
+                put("push_token", token)
+                put("push_os", "android")
+            }
+            val path = "externalUser/${userData.id}/$apiKey"
+            ApiClient.put(
+                path,
+                data,
+                object : ApiClient.ResultCallback {
+                    override fun onSuccess(result: JSONObject) {
+                        Log.d(
+                            LOG_TAG,
+                            "Put request completed successfully with path path[$path]"
+                        )
+                    }
+
+                    override fun onFailure(code: Int, errorBody: JSONObject) {
+                        Log.d(
+                            LOG_TAG,
+                            "Error in put request with path[$path]. Error code [$code]. Error message [$errorBody]"
+                        )
+                    }
+                })
         }
     }
 
-    private fun performRegisterSync(user: UserData, apiKey: String, token: String?) {
-        val data = JSONObject().apply {
-            put("id", user.id.toString())
-            put("service_id", apiKey)
-            put("name", user.name)
-            put("surname", user.surname)
-            put("email", user.email)
-            put("phone", user.phone)
-            put("push_token", token)
-            put("push_os", "android")
-        }
-        ApiClient.put("externalUser/${user.id}/$apiKey", data, object : ApiClient.ResultCallback {
-            override fun onSuccess(result: JSONObject) {
-
-            }
-
-            override fun onFailure(code: Int, errorBody: JSONObject) {
-
-            }
-        })
+    private companion object {
+        const val LOG_TAG = "SabycomRemoteRepository"
     }
-
-    internal class RegisterData(
-        val user: UserData? = null,
-        val apiKey: String? = null,
-        val token: String? = null
-    )
 }
