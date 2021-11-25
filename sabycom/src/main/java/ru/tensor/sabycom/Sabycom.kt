@@ -2,6 +2,7 @@ package ru.tensor.sabycom
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.drawee.backends.pipeline.Fresco
 import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.push.PushNotificationCenter
 import ru.tensor.sabycom.push.SabycomPushService
@@ -34,6 +35,7 @@ object Sabycom : SabycomPushService {
         check(sabycomFeature == null && pushService == null) { "Sabycom already initialized" }
         repository = Repository(SabycomRemoteRepository(), SabycomLocalRepository(context))
         countController = UnreadCountController(repository)
+        Fresco.initialize(context)
         sabycomFeature = SabycomFeature(apiKey, repository)
         pushService = PushNotificationCenter(context, repository, countController)
     }

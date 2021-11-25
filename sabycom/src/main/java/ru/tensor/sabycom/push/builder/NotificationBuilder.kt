@@ -5,7 +5,7 @@ import ru.tensor.sabycom.push.parser.data.PushNotificationMessage
 /**
  * @author am.boldinov
  */
-internal interface PushNotificationBuilder {
+internal interface NotificationBuilder {
 
-    fun build(message: PushNotificationMessage): SabycomPushNotification
+    fun build(message: PushNotificationMessage): SabycomNotification
 }

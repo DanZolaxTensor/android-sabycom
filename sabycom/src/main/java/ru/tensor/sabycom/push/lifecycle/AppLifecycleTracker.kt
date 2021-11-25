@@ -1,5 +1,6 @@
 package ru.tensor.sabycom.push.lifecycle
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
 
 /**
@@ -12,4 +13,6 @@ internal interface AppLifecycleTracker {
     fun isAppInForegroundNow(): Boolean
 
     fun hasCreatedTasks(): Boolean
+
+    fun getForegroundActivity(): Activity?
 }

@@ -1,13 +1,15 @@
 package ru.tensor.sabycom.push.manager
 
-import android.app.Notification
+import ru.tensor.sabycom.push.builder.SabycomNotification
 
 /**
  * @author am.boldinov
  */
 internal interface NotificationManager {
 
-    fun notify(tag: String, id: Int, notification: Notification)
+    fun notify(notification: SabycomNotification): Boolean
 
     fun cancel(tag: String, id: Int)
+
+    fun cancelAll()
 }

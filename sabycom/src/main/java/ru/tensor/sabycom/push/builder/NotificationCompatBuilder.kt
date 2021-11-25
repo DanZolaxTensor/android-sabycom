@@ -3,29 +3,21 @@ package ru.tensor.sabycom.push.builder
 import android.app.Notification
 import android.content.Context
 import android.media.RingtoneManager
-import android.os.Vibrator
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import ru.tensor.sabycom.R
 import ru.tensor.sabycom.push.util.NotificationChannelUtil
+import ru.tensor.sabycom.push.util.SwipeOutHelper
 
 /**
  * @author am.boldinov
  */
-internal class SabycomPushNotification(
-    private val context: Context,
+internal class NotificationCompatBuilder(
+    val context: Context,
     category: String = DEFAULT_CATEGORY,
-    channelId: String = NotificationChannelUtil.DEFAULT_NOTIFICATION_CHANNEL_ID,
-    builderBlock: NotificationCompat.Builder.() -> Unit
-) {
+    channelId: String = NotificationChannelUtil.DEFAULT_NOTIFICATION_CHANNEL_ID
+) : NotificationCompat.Builder(context, channelId) {
 
-    private val builder = NotificationCompat.Builder(context, channelId).apply {
+    init {
         setCategory(category)
-        configureDefault()
-        builderBlock.invoke(this)
-    }
-
-    private fun NotificationCompat.Builder.configureDefault() {
         // design
         // setColor(ContextCompat.getColor(context)) TODO 30.09.2021 установить иконки виджета, либо использовать иконки приложения
         setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -46,27 +38,13 @@ internal class SabycomPushNotification(
             setSound(it)
         }
 
-        // vibration
-        (context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator?)?.let {
-            if (it.hasVibrator()) {
-                setVibrate(
-                    longArrayOf(
-                        VIBRATION_PATTERN_ELEMENT,
-                        VIBRATION_PATTERN_ELEMENT,
-                        VIBRATION_PATTERN_ELEMENT
-                    )
-                )
-            }
-        }
+        // actions
+       // setDeleteIntent(SwipeOutHelper.createSwipeOutIntent(context, tag, id)) TODO
     }
-
-    fun build(): Notification = builder.build()
 
     companion object {
 
         private const val DEFAULT_CATEGORY = Notification.CATEGORY_MESSAGE
         private const val LIGHT_ON_OFF_MS = 1000
-        private const val VIBRATION_PATTERN_ELEMENT = 500L
     }
-
 }

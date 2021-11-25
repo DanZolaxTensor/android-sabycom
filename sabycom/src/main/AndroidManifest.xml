@@ -3,11 +3,18 @@
     package="ru.tensor.sabycom">
     <!--Разрешение для доступа в интернет, необходимо для загрузки веб виджета "мобильный консультант"-->
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application>
         <activity
             android:name="ru.tensor.sabycom.widget.SabycomActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:theme="@style/SabycomTransparentActivityTheme" />
+
+        <receiver
+            android:name=".push.receiver.SwipeOutNotificationReceiver"
+            android:enabled="true"
+            android:exported="false" />
     </application>
+
 </manifest>
