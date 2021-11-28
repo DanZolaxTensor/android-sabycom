@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sabycom_meta_push_notification_icon">ru.tensor.sabycom.push.notification_icon</string>
+    <string name="sabycom_meta_push_notification_color">ru.tensor.sabycom.push.notification_color</string>
+</resources>

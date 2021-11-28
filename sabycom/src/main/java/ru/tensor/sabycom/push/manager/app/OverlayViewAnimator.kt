@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
+import androidx.annotation.UiThread
 
 /**
  * @author am.boldinov
  */
+@UiThread
 internal class OverlayViewAnimator {
 
-    fun animateNotify(target: View, listener: (AnimatorListener.() -> Unit)? = null) {
+    fun animateShow(target: View, listener: (AnimatorListener.() -> Unit)? = null) {
         target.apply {
             scaleX = 0.7f
             scaleY = 0.7f
@@ -27,7 +29,7 @@ internal class OverlayViewAnimator {
         }
     }
 
-    fun animateCancel(target: View, listener: (AnimatorListener.() -> Unit)? = null) {
+    fun animateHide(target: View, listener: (AnimatorListener.() -> Unit)? = null) {
         target.apply {
             animate().scaleX(0.5f)
                 .scaleY(0.5f)

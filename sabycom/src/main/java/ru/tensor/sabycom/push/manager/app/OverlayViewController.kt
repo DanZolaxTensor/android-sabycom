@@ -19,7 +19,7 @@ internal class OverlayViewController {
 
     private val animator = OverlayViewAnimator()
 
-    fun show(activity: Activity, notification: SabycomNotification) {
+    fun show(activity: Activity, notification: SabycomNotification, animation: Boolean = false) {
         val binder = notification.inAppBinder ?: throw IllegalStateException()
         activity.tryGetRootView().postOnLayout {
             if (it.parent != null) {
@@ -27,7 +27,9 @@ internal class OverlayViewController {
                     val view = findViewWithTag(notification.tag) ?: binder.create(context).apply {
                         tag = notification.tag
                         addView(this)
-                        animator.animateNotify(this)
+                        if (animation) {
+                            animator.animateShow(this)
+                        }
                     }
                     binder.bind(view, notification.data)
                 }
@@ -37,16 +39,23 @@ internal class OverlayViewController {
         }
     }
 
-    fun hide(activity: Activity, tag: String) {
+    fun hide(activity: Activity, tag: String, animation: Boolean = false) {
         activity.getRootView()?.apply {
             findViewWithTag<View>(tag)?.let { target ->
-                animator.animateCancel(target) {
-                    onFinish {
-                        removeView(target)
-                        if (childCount == 0) {
-                            removeSelf()
+                val action = {
+                    removeView(target)
+                    if (childCount == 0) {
+                        removeSelf()
+                    }
+                }
+                if (animation) {
+                    animator.animateHide(target) {
+                        onFinish {
+                            action()
                         }
                     }
+                } else {
+                    action()
                 }
             }
         }

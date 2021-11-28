@@ -1,8 +1,6 @@
 package ru.tensor.sabycom.push.builder.chat
 
-import android.app.PendingIntent
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -71,7 +69,6 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
         setPadding(contentLayout.elevation.toInt())
         addView(contentLayout)
         addView(closeView)
-        setStackable(true)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -94,32 +91,12 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
         )
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-//        val drawable = GradientDrawable().apply {
-//            shape = GradientDrawable.RECTANGLE
-//            setColor(ColorUtils.setAlphaComponent(Color.BLACK, 10))
-//            setBounds(
-//                contentLayout.left,
-//                contentLayout.top,
-//                contentLayout.right,
-//                contentLayout.bottom + 30
-//            )
-//            cornerRadius = 40f
-//        }
-//        drawable.draw(canvas)
-    }
-
-    fun setDeleteIntent(intent: PendingIntent) {
-
+    override fun setOnClickListener(l: OnClickListener?) {
+        contentLayout.setOnClickListener(l)
     }
 
     fun setOnCloseClickListener(l: OnClickListener?) {
         closeView.setOnClickListener(l)
-    }
-
-    override fun setOnClickListener(l: OnClickListener?) {
-        contentLayout.setOnClickListener(l)
     }
 
     fun setAvatarUrl(url: String?) {
@@ -149,10 +126,6 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
 
     fun setDate(date: CharSequence) {
         dateView.text = date
-    }
-
-    fun setStackable(stackable: Boolean) {
-
     }
 
     fun setCounter(counter: Int) {

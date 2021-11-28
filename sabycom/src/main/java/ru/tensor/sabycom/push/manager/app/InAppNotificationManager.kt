@@ -1,66 +1,55 @@
 package ru.tensor.sabycom.push.manager.app
 
-import android.app.Dialog
 import android.content.Context
 import ru.tensor.sabycom.push.builder.SabycomNotification
-import ru.tensor.sabycom.push.lifecycle.AppLifecycleTracker
 import ru.tensor.sabycom.push.manager.NotificationManager
-import java.util.*
+import ru.tensor.sabycom.push.util.registerForegroundTracker
 
 /**
  * @author am.boldinov
  */
 internal class InAppNotificationManager(
     context: Context,
-    private val lifecycleTracker: AppLifecycleTracker
 ) : NotificationManager {
 
-    private val dialogMap = WeakHashMap<Dialog, NotifyData>()
     private val viewController = OverlayViewController()
+    private val foregroundTracker = context.registerForegroundTracker {
+        onBackground {
+            publishedNotification?.apply {
+                viewController.hide(it, tag, false)
+            }
+        }
+        onForeground {
+            publishedNotification?.apply {
+                viewController.show(it, this, false)
+            }
+        }
+    }
+
+    private var publishedNotification: SabycomNotification? = null
 
     override fun notify(notification: SabycomNotification): Boolean {
-        return lifecycleTracker.getForegroundActivity()?.let {
+        return notification.inAppBinder != null && foregroundTracker.launchOnForeground {
+            publishedNotification = notification
             viewController.show(it, notification)
-            true
-        } ?: false
-//        cancel(tag, id)
-//        activityProvider.getActivity()?.let {
-//            dialogMap[buildDialog(it).apply {
-//                show()
-//            }] = NotifyData(tag, id)
-//            if (it is ComponentActivity) {
-//                it.lifecycle.addObserver(object : DefaultLifecycleObserver {
-//                    override fun onDestroy(owner: LifecycleOwner) {
-//                        cancel(tag, id)
-//                        owner.lifecycle.removeObserver(this)
-//                    }
-//                })
-//            }
-//        } ?: throw IllegalStateException()
-//        activityProvider.getActivity()?.let {
-//            Observable
-//        }
+        }
     }
 
     override fun cancel(tag: String, id: Int) {
-        lifecycleTracker.getForegroundActivity()?.let {
+        foregroundTracker.launchOnForeground {
             viewController.hide(it, tag)
         }
-//        dialogMap.iterator().apply {
-//            while (hasNext()) {
-//                next().apply {
-//                    if (value.tag == tag && value.id == id) {
-//                        key.dismiss()
-//                        remove()
-//                    }
-//                }
-//            }
-//        }
+        publishedNotification?.let {
+            if (it.tag == tag && it.id == id) {
+                publishedNotification = null
+            }
+        }
     }
 
     override fun cancelAll() {
-        // TODO
+        foregroundTracker.launchOnForeground {
+            viewController.hideAll(it)
+        }
+        publishedNotification = null
     }
-
-    private data class NotifyData(val tag: String, val id: Int)
 }

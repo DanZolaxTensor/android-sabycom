@@ -8,4 +8,5 @@
     </color>
     <color name="sabycom_notification_chat_counter_color">@android:color/white</color>
     <color name="sabycom_notification_chat_counter_background_color">#D34E0E</color>
+    <color name="sabycom_notification_default_color">#30415D</color>
 </resources>

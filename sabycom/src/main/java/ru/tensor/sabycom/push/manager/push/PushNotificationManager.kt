@@ -6,7 +6,6 @@ import android.os.Looper
 import androidx.core.app.NotificationManagerCompat
 import ru.tensor.sabycom.push.builder.SabycomNotification
 import ru.tensor.sabycom.push.manager.NotificationManager
-import ru.tensor.sabycom.push.util.SwipeOutHelper
 import java.lang.Exception
 
 /**
@@ -21,13 +20,6 @@ internal class PushNotificationManager(
     override fun notify(notification: SabycomNotification): Boolean {
         val push = notification.pushBinder?.let {
             it.create(context).apply {
-                setDeleteIntent(
-                    SwipeOutHelper.createSwipeOutIntent(
-                        context,
-                        notification.tag,
-                        notification.id
-                    )
-                )
                 it.bind(this, notification.data)
             }
         }?.build() ?: return false

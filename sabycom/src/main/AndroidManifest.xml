@@ -10,11 +10,6 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:theme="@style/SabycomTransparentActivityTheme" />
-
-        <receiver
-            android:name=".push.receiver.SwipeOutNotificationReceiver"
-            android:enabled="true"
-            android:exported="false" />
     </application>
 
 </manifest>

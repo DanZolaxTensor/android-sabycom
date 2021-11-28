@@ -23,7 +23,6 @@ internal class ChatNotificationBuilder(
     override fun build(message: PushNotificationMessage): SabycomNotification {
         val avatarUrl = message.data.optString("operatorPhoto")
         val unreadCount = message.data.optInt("unreadCount")
-        val channelUuid = message.data.optString("channelUUID")
         val data = ChatNotificationData(
             "tag",
             1,
