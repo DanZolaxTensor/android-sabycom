@@ -6,12 +6,13 @@ import ru.tensor.sabycom.push.parser.data.PushCloudAction
 /**
  * @author am.boldinov
  */
-internal class ChatNotificationData(
+internal data class ChatNotificationData(
     override val tag: String,
     override val id: Int,
     override val title: String,
     override val text: String,
     override val action: PushCloudAction,
+    val dateTime: Long,
     val avatarUrl: String? = null,
     val unreadCount: Int
 ) : NotificationData

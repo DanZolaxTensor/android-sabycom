@@ -11,11 +11,14 @@ import ru.tensor.sabycom.push.parser.SabycomPushNotificationParser
 import ru.tensor.sabycom.push.parser.data.PushType
 import ru.tensor.sabycom.push.manager.CompositeNotificationManager
 import ru.tensor.sabycom.push.manager.NotificationActionDispatcher
+import ru.tensor.sabycom.push.manager.NotificationLocker
 import ru.tensor.sabycom.push.manager.app.InAppNotificationManager
 import ru.tensor.sabycom.push.manager.push.PushNotificationManager
+import ru.tensor.sabycom.push.parser.data.PushCloudAction
 import ru.tensor.sabycom.push.util.NotificationChannelUtil
 import ru.tensor.sabycom.widget.counter.IUnreadCountController
 import ru.tensor.sabycom.widget.repository.Repository
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * @author am.boldinov
@@ -25,7 +28,7 @@ internal class PushNotificationCenter(
     private val repository: Repository,
     private val countController: IUnreadCountController,
     private val parser: PushNotificationParser
-) : SabycomPushService, NotificationActionDispatcher {
+) : SabycomPushService, NotificationActionDispatcher, NotificationLocker {
 
     constructor(
         context: Context,
@@ -39,11 +42,12 @@ internal class PushNotificationCenter(
     )
 
     private val builderMap = mutableMapOf<PushType, NotificationBuilder>()
-    private val handler = Handler(Looper.getMainLooper())
     private val notificationManager = CompositeNotificationManager(
         InAppNotificationManager(context),
         PushNotificationManager(context)
     )
+    private val handler = Handler(Looper.getMainLooper())
+    private val locked = AtomicBoolean()
 
     init {
         initNotificationChannels()
@@ -58,9 +62,15 @@ internal class PushNotificationCenter(
         val message = parser.parse(payload)
         if (message.addresseeId == repository.getUserData()?.id.toString()) {
             countController.requestCount()
-            builderMap[message.type]?.build(message)?.let { notification ->
+            builderMap[message.type]?.build(message)?.apply {
                 handler.post {
-                    notificationManager.notify(notification)
+                    if (!locked.get()) {
+                        if (data.action == PushCloudAction.CANCEL) {
+                            notificationManager.cancel(tag, id)
+                        } else {
+                            notificationManager.notify(this)
+                        }
+                    }
                 }
             }
         } else {
@@ -80,6 +90,15 @@ internal class PushNotificationCenter(
         notificationManager.cancelAll()
     }
 
+    override fun lock() {
+        dispatchOnCancelAll()
+        locked.set(true)
+    }
+
+    override fun unlock() {
+        locked.set(false)
+    }
+
     private fun initNotificationChannels() {
         NotificationChannelUtil.submitDefaultNotificationChannel(context, "САБИДОК") // TODO name
     }
@@ -87,5 +106,4 @@ internal class PushNotificationCenter(
     private fun initPushBuilders() {
         builderMap[PushType.CHAT] = ChatNotificationBuilder(this)
     }
-
 }

@@ -3,6 +3,7 @@ package ru.tensor.sabycom.push.builder.chat
 import android.app.PendingIntent
 import android.content.Context
 import androidx.core.app.NotificationCompat
+import ru.tensor.sabycom.BuildConfig
 import ru.tensor.sabycom.push.builder.NotificationBuilder
 import ru.tensor.sabycom.push.builder.SabycomNotification
 import ru.tensor.sabycom.push.builder.binder.InAppNotificationBinder
@@ -12,6 +13,8 @@ import ru.tensor.sabycom.push.manager.NotificationActionDispatcher
 import ru.tensor.sabycom.push.parser.data.PushCloudAction
 import ru.tensor.sabycom.push.parser.data.PushNotificationMessage
 import ru.tensor.sabycom.widget.SabycomActivity
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * @author am.boldinov
@@ -23,12 +26,14 @@ internal class ChatNotificationBuilder(
     override fun build(message: PushNotificationMessage): SabycomNotification {
         val avatarUrl = message.data.optString("operatorPhoto")
         val unreadCount = message.data.optInt("unreadCount")
+        val tag = BuildConfig.LIBRARY_PACKAGE_NAME.plus(".").plus(message.type.name)
         val data = ChatNotificationData(
-            "tag",
-            1,
+            tag,
+            tag.hashCode(),
             message.title,
             message.text,
             message.action,
+            message.sendTime,
             avatarUrl,
             unreadCount
         )
@@ -73,7 +78,7 @@ internal class ChatNotificationBuilder(
         override fun bind(view: ChatNotificationLayout, data: ChatNotificationData) {
             view.setTitle(data.title)
             view.setSubtitle(data.text)
-            view.setDate("12 мар.")
+            view.setDate(formatDate(data.dateTime))
             view.setCounter(data.unreadCount)
             view.setAvatarUrl(data.avatarUrl)
             view.setOnCloseClickListener {
@@ -84,8 +89,12 @@ internal class ChatNotificationBuilder(
                 it.context.startActivity(SabycomActivity.createIntent(it.context))
             }
         }
-    }
 
-    //val tag = BuildConfig.LIBRARY_PACKAGE_NAME.plus(".").plus(type.name)
-    //val id = tag.hashCode()
+        private fun formatDate(dateTime: Long): String {
+            return SimpleDateFormat("d MMM", Locale.getDefault()).run {
+                timeZone = TimeZone.getDefault()
+                format(Date(dateTime))
+            }
+        }
+    }
 }

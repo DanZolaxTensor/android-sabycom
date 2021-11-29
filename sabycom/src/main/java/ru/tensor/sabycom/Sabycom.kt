@@ -6,6 +6,7 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.push.PushNotificationCenter
 import ru.tensor.sabycom.push.SabycomPushService
+import ru.tensor.sabycom.push.manager.NotificationLocker
 import ru.tensor.sabycom.widget.SabycomFeature
 import ru.tensor.sabycom.widget.counter.UnreadCountController
 import ru.tensor.sabycom.widget.counter.UnreadCounterCallback
@@ -25,6 +26,7 @@ object Sabycom : SabycomPushService {
     internal var sabycomFeature: SabycomFeature? = null
     internal lateinit var repository: Repository
     internal lateinit var countController: UnreadCountController
+    internal lateinit var notificationLocker: NotificationLocker
 
     /**
      * Инициализация компонента предпочтительно вызывать в onCreate вашего Application класса
@@ -37,7 +39,9 @@ object Sabycom : SabycomPushService {
         countController = UnreadCountController(repository)
         Fresco.initialize(context)
         sabycomFeature = SabycomFeature(apiKey, repository)
-        pushService = PushNotificationCenter(context, repository, countController)
+        pushService = PushNotificationCenter(context, repository, countController).also {
+            notificationLocker = it
+        }
     }
 
     /**
