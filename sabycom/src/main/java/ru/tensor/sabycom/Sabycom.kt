@@ -3,6 +3,9 @@ package ru.tensor.sabycom
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.imagepipeline.core.ImagePipelineConfig
+import com.facebook.imagepipeline.core.ImageTranscoderType
+import com.facebook.imagepipeline.core.MemoryChunkType
 import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.push.PushNotificationCenter
 import ru.tensor.sabycom.push.SabycomPushService
@@ -35,9 +38,9 @@ object Sabycom : SabycomPushService {
      */
     fun initialize(context: Context, apiKey: String) {
         check(sabycomFeature == null && pushService == null) { "Sabycom already initialized" }
+        initFresco(context)
         repository = Repository(SabycomRemoteRepository(), SabycomLocalRepository(context))
         countController = UnreadCountController(repository)
-        Fresco.initialize(context)
         sabycomFeature = SabycomFeature(apiKey, repository)
         pushService = PushNotificationCenter(context, repository, countController).also {
             notificationLocker = it
@@ -93,6 +96,17 @@ object Sabycom : SabycomPushService {
 
     override fun sendToken(token: String) {
         checkNotNull(pushService) { NOT_INIT_ERROR }.sendToken(token)
+    }
+
+    private fun initFresco(context: Context) {
+        val pipelineConfig = ImagePipelineConfig.newBuilder(context)
+            .setDownsampleEnabled(true)
+            .setMemoryChunkType(MemoryChunkType.BUFFER_MEMORY)
+            .setImageTranscoderType(ImageTranscoderType.JAVA_TRANSCODER)
+            .experiment().setNativeCodeDisabled(true)
+            .build()
+
+        Fresco.initialize(context, pipelineConfig, null, false)
     }
 
     //endregion

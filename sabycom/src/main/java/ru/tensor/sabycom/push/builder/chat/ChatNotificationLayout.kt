@@ -22,6 +22,7 @@ import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.view.SimpleDraweeView
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 import ru.tensor.sabycom.R
+import ru.tensor.sabycom.data.PreviewerUrlUtil
 
 private const val CLOSE_OVERLAP_WIDTH_FACTOR = 0.4
 private const val CLOSE_OVERLAP_HEIGHT_FACTOR = 0.2
@@ -105,7 +106,7 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
         }?.let {
             val controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(
-                    ImageRequestBuilder.newBuilderWithSource(Uri.parse(it)).build()
+                    ImageRequestBuilder.newBuilderWithSource(formatAvatarUri(it)).build()
                 )
                 .setOldController(avatarView.controller)
                 .setRetainImageOnFailure(true)
@@ -163,5 +164,15 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
             ContextCompat.getDrawable(context, resourceId)
         })
         return LayerDrawable(drawables)
+    }
+
+    private fun formatAvatarUri(url: String): Uri {
+        return Uri.parse(
+            PreviewerUrlUtil.formatImageUrl(
+                url,
+                avatarView.layoutParams.width,
+                avatarView.layoutParams.height
+            ) ?: url
+        )
     }
 }

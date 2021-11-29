@@ -11,7 +11,7 @@ import kotlin.jvm.Throws
  */
 internal object UrlUtil {
 
-    const val HOST_URL = "https://pre-test-consultant.sbis.ru/" // TODO 29.09.2021 настраиваемый gradle url
+    const val HOST_URL = "https://pre-test-consultant.sbis.ru" // TODO 29.09.2021 настраиваемый gradle url
 
     fun buildWidgetUrl(userId: String, apiKey: String): String {
         val params = JSONObject().apply {
@@ -20,7 +20,14 @@ internal object UrlUtil {
                 put("service_id", apiKey)
             })
         }
-        return HOST_URL.plus("consultant/$apiKey/?p=${params.encodeParams()}")
+        return HOST_URL.plus("/consultant/$apiKey/?p=${params.encodeParams()}")
+    }
+
+    /**
+     * Форматирует ссылки на внутренние ресурсы, которые приходят без хоста.
+     */
+    fun formatUrlWithHost(url: String): String {
+        return HOST_URL.plus(if (url.startsWith("/")) url else "/$url")
     }
 
     @Throws(UnsupportedEncodingException::class)
