@@ -76,17 +76,19 @@ internal class ChatNotificationBuilder(
         }
 
         override fun bind(view: ChatNotificationLayout, data: ChatNotificationData) {
-            view.setTitle(data.title)
-            view.setSubtitle(data.text)
-            view.setDate(formatDate(data.dateTime))
-            view.setCounter(data.unreadCount)
-            view.setAvatarUrl(data.avatarUrl)
-            view.setOnCloseClickListener {
-                actionDispatcher.dispatchOnCancel(data.tag, data.id)
-            }
-            view.setOnClickListener {
-                actionDispatcher.dispatchOnCancel(data.tag, data.id)
-                it.context.startActivity(SabycomActivity.createIntent(it.context))
+            view.apply {
+                setTitle(data.title)
+                setSubtitle(data.text)
+                setDate(formatDate(data.dateTime))
+                setCounter(data.unreadCount)
+                setAvatarUrl(data.avatarUrl)
+                setOnCloseClickListener {
+                    actionDispatcher.dispatchOnCancel(data.tag, data.id)
+                }
+                setOnClickListener {
+                    actionDispatcher.dispatchOnCancel(data.tag, data.id)
+                    it.context.startActivity(SabycomActivity.createIntent(it.context))
+                }
             }
         }
 

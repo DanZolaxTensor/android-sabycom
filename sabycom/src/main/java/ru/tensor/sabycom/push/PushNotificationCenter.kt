@@ -21,6 +21,11 @@ import ru.tensor.sabycom.widget.repository.Repository
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
+ * Представляет собой точку входа для обработки событий по пуш-уведомлениям.
+ * Получает новые события от Messaging Service, обрабатывает и передает управление
+ * готовыми данными по пушам прикладным обработчикам, которые хранит на всё время жизни компонента.
+ * Регистрирует основные каналы уведомлений для публикации.
+ *
  * @author am.boldinov
  */
 internal class PushNotificationCenter(

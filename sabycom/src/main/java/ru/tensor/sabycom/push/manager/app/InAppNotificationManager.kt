@@ -6,6 +6,10 @@ import ru.tensor.sabycom.push.manager.NotificationManager
 import ru.tensor.sabycom.push.util.registerForegroundTracker
 
 /**
+ * Менеджер для публикации/отмены публикации уведомлений внутри приложения (в виде всплывающего
+ * сообщения поверх пользовательского интерфейса).
+ * Публикует уведомления только если приложение находится на переднем плане.
+ *
  * @author am.boldinov
  */
 internal class InAppNotificationManager(

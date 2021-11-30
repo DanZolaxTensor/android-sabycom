@@ -9,6 +9,10 @@ import ru.tensor.sabycom.push.manager.NotificationManager
 import java.lang.Exception
 
 /**
+ * Менеджер для публикации/отмены публикации пуш-уведомлений
+ * через системный [NotificationManagerCompat].
+ * Уведомления отображаются в статус баре и на экране блокировки телефона.
+ *
  * @author am.boldinov
  */
 internal class PushNotificationManager(

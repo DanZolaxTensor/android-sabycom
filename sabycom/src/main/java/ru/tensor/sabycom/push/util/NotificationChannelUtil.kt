@@ -12,6 +12,8 @@ import ru.tensor.sabycom.BuildConfig
 import java.lang.IllegalArgumentException
 
 /**
+ * Утилита для работы с каналами уведомлений.
+ *
  * @author am.boldinov
  */
 @SuppressLint("NewApi")
@@ -19,12 +21,30 @@ internal object NotificationChannelUtil {
 
     val DEFAULT_NOTIFICATION_CHANNEL_ID = buildChannelId("notification")
 
+    /**
+     * Создает канал по умолчанию для публикации уведомлений в [NotificationManager]
+     * с указанным именем.
+     * @param context контекст приложения
+     * @param name название канала по умолчанию
+     *
+     * @return true если каналы поддерживаются устройством и канал был успешно создан, false иначе
+     */
     fun submitDefaultNotificationChannel(context: Context, name: String): Boolean {
         return context.submitChannel {
-            NotificationChannel(DEFAULT_NOTIFICATION_CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH)
+            NotificationChannel(
+                DEFAULT_NOTIFICATION_CHANNEL_ID,
+                name,
+                NotificationManager.IMPORTANCE_HIGH
+            )
         }
     }
 
+    /**
+     * Проверяет поддержку каналов уведомлений.
+     * Каналы доступны начиная с Android Oreo.
+     *
+     * @return true если каналы поддерживаются, false иначе
+     */
     @Suppress("MemberVisibilityCanBePrivate")
     fun isSupportChannels(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O

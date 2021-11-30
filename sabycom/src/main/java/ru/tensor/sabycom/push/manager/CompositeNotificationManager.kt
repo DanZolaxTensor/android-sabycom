@@ -3,6 +3,10 @@ package ru.tensor.sabycom.push.manager
 import ru.tensor.sabycom.push.builder.SabycomNotification
 
 /**
+ * Реализация менеджера для последовательной передачи управления всем существующим менеджерам.
+ * Необходимо использовать в случае наличия нескольких менеджеров для работы с уведомлениями,
+ * каждый из которых публикует уведомления в разные части интерфейса.
+ *
  * @author am.boldinov
  */
 internal class CompositeNotificationManager(
@@ -11,6 +15,12 @@ internal class CompositeNotificationManager(
 
     private val sources = managers
 
+    /**
+     * Передает управление на публикацию только одному менеджеру, который успешно
+     * опубликует уведомление.
+     * Удалит опубликованные уведомления в случае их наличия в других менеджерах с аналогичными
+     * [SabycomNotification.tag] и [SabycomNotification.id]
+     */
     override fun notify(notification: SabycomNotification): Boolean {
         return sources.find {
             it.notify(notification)

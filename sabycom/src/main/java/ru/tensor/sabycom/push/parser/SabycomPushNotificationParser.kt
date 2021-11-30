@@ -8,6 +8,8 @@ import ru.tensor.sabycom.push.parser.data.PushType
 import java.lang.Exception
 
 /**
+ * Реализация парсера пуш-уведомлений по событиям виджета СБИС онлайн консультант.
+ *
  * @author am.boldinov
  */
 internal class SabycomPushNotificationParser : PushNotificationParser {

@@ -9,11 +9,16 @@ import android.view.animation.OvershootInterpolator
 import androidx.annotation.UiThread
 
 /**
+ * Аниматор для работы со всплывающими View поверх пользовательского интерфейса.
+ *
  * @author am.boldinov
  */
 @UiThread
 internal class OverlayViewAnimator {
 
+    /**
+     * Анимирует появление View.
+     */
     fun animateShow(target: View, listener: (AnimatorListener.() -> Unit)? = null) {
         target.apply {
             scaleX = 0.7f
@@ -29,6 +34,9 @@ internal class OverlayViewAnimator {
         }
     }
 
+    /**
+     * Анимирует скрытие View.
+     */
     fun animateHide(target: View, listener: (AnimatorListener.() -> Unit)? = null) {
         target.apply {
             animate().scaleX(0.5f)

@@ -5,7 +5,7 @@ package ru.tensor.sabycom.push.parser.data
  *
  * @author am.boldinov
  */
-enum class PushCloudAction(val value: Int) {
+internal enum class PushCloudAction(val value: Int) {
     CANCEL(0), // отменяет полученное ранее уведомление (удалить пуш)
     NOTIFY(1), // уведомляет пользователя о новом уведомлении (показать пуш)
     UPDATE(2); // обновляет полученнное ранее уведомление (обновить информацию в пуше)

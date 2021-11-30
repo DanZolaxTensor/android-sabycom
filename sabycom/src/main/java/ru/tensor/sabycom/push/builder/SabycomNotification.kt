@@ -5,6 +5,13 @@ import ru.tensor.sabycom.push.builder.binder.InAppNotificationBinder
 import ru.tensor.sabycom.push.builder.binder.PushNotificationBinder
 
 /**
+ * Модель пуш-уведомления для отображения.
+ * @property data данные по уведомлению для биндинга
+ * @property pushBinder
+ * @property inAppBinder
+ * @property tag тэг уведомления, под которым оно будет опубликовано
+ * @property id идентификатор уведомления
+ *
  * @author am.boldinov
  */
 internal class SabycomNotification private constructor(

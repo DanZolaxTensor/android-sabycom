@@ -12,6 +12,10 @@ import ru.tensor.sabycom.R
 import ru.tensor.sabycom.push.builder.SabycomNotification
 
 /**
+ * Управляет появлением/скрытием всплывающих уведомлений.
+ * Каждое уведомление представляет собой View, которая отображается поверх
+ * пользовательского интерфейса, при этом не блокируя его нажатия.
+ *
  * @author am.boldinov
  */
 @UiThread

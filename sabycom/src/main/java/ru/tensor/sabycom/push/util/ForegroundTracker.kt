@@ -6,6 +6,12 @@ import android.content.Context
 import android.os.Bundle
 
 /**
+ * Трекер для подписки на события перехода приложения на передний или на задний план.
+ *
+ * @see registerForegroundTracker
+ * @see unregisterForegroundTracker
+ * @see Application.registerActivityLifecycleCallbacks
+ *
  * @author am.boldinov
  */
 internal class ForegroundTracker(
