@@ -17,6 +17,8 @@ import ru.tensor.sabycom.R
 import ru.tensor.sabycom.push.util.NotificationChannelUtil
 
 /**
+ * Обертка над [NotificationCompat.Builder] для конфигурации по умолчанию.
+ *
  * @author am.boldinov
  */
 internal class NotificationCompatBuilder(

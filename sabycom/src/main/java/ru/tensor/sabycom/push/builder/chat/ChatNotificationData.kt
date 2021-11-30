@@ -4,6 +4,11 @@ import ru.tensor.sabycom.push.builder.NotificationData
 import ru.tensor.sabycom.push.parser.data.PushCloudAction
 
 /**
+ * Данные уведомления по сообщению из чата виджета СБИС онлайн консультант.
+ * @property dateTime дата отправки сообщения
+ * @property avatarUrl ссылка на фото оператора
+ * @property unreadCount кол-во непрочитанных сообщений
+ *
  * @author am.boldinov
  */
 internal data class ChatNotificationData(

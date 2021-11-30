@@ -5,10 +5,10 @@ import ru.tensor.sabycom.push.builder.binder.InAppNotificationBinder
 import ru.tensor.sabycom.push.builder.binder.PushNotificationBinder
 
 /**
- * Модель пуш-уведомления для отображения.
+ * Модель уведомления для отображения.
  * @property data данные по уведомлению для биндинга
- * @property pushBinder
- * @property inAppBinder
+ * @property pushBinder биндер пуш-уведомлений
+ * @property inAppBinder биндер всплывающих уведомлений внутри приложения
  * @property tag тэг уведомления, под которым оно будет опубликовано
  * @property id идентификатор уведомления
  *

@@ -34,7 +34,7 @@ internal class SabycomPushNotificationParser : PushNotificationParser {
                 JSONObject(payload.get(KeyContract.DATA))
             )
         } catch (e: Exception) {
-            throw UnknownPushNotificationTypeException()
+            throw UnknownPushNotificationTypeException(throwable = e)
         }
     }
 

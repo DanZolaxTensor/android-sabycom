@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
+ * Билдер по созданию уведомления по сообщениям из чата виджета СБИС онлайн консультант.
+ *
  * @author am.boldinov
  */
 internal class ChatNotificationBuilder(

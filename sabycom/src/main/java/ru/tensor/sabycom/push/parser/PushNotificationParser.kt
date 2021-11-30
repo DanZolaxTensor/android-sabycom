@@ -14,6 +14,7 @@ internal interface PushNotificationParser {
 
     /**
      * Проверяет валидность данных пуш-уведомления.
+     * @param payload данные по пуш-уведомлению от Messaging Service
      *
      * @return true если payload содержит корректные данные для отображения уведомлений, false иначе.
      */
@@ -21,7 +22,7 @@ internal interface PushNotificationParser {
 
     /**
      * Парсит "сырые" данные пуш-уведомления в data-модель для дальнейшей обработки.
-     * В случае если данные являются не валидными бросает [UnknownPushNotificationTypeException].
+     * В случае если данные являются невалидными бросает [UnknownPushNotificationTypeException].
      * @see isValidPayload
      * @param payload данные по пуш-уведомлению от Messaging Service
      *

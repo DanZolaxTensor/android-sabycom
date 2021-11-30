@@ -28,6 +28,9 @@ private const val CLOSE_OVERLAP_WIDTH_FACTOR = 0.4
 private const val CLOSE_OVERLAP_HEIGHT_FACTOR = 0.2
 
 /**
+ * Layout для отображения всплывающего уведомления по сообщениям из чата
+ * виджета СБИС онлайн консультант.
+ *
  * @author am.boldinov
  */
 internal class ChatNotificationLayout @JvmOverloads constructor(
@@ -92,14 +95,23 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
         )
     }
 
+    /**
+     * Устанавливает слушатель нажатий на контейнер с содержимым уведомления.
+     */
     override fun setOnClickListener(l: OnClickListener?) {
         contentLayout.setOnClickListener(l)
     }
 
+    /**
+     * Устанавливает слушатель нажатий на кнопку закрытия уведомления.
+     */
     fun setOnCloseClickListener(l: OnClickListener?) {
         closeView.setOnClickListener(l)
     }
 
+    /**
+     * Устанавливает ссылку для отображения фото оператора.
+     */
     fun setAvatarUrl(url: String?) {
         url.takeUnless {
             it.isNullOrEmpty()
@@ -117,18 +129,31 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Устанавливает заголовок сообщения.
+     */
     fun setTitle(title: CharSequence) {
         titleView.text = title
     }
 
+    /**
+     * Устанавливает подзаголовок (текст) сообщения.
+     */
     fun setSubtitle(subtitle: CharSequence) {
         subtitleView.text = subtitle
     }
 
+    /**
+     * Устанавливает отформатированную дату отправки сообщения.
+     */
     fun setDate(date: CharSequence) {
         dateView.text = date
     }
 
+    /**
+     * Устанавливает счетчик непрочитанных сообщений.
+     * Отображается только при положительных значениях.
+     */
     fun setCounter(counter: Int) {
         counterView.apply {
             if (counter > 0) {

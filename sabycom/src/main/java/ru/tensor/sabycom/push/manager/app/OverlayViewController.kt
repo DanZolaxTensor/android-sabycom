@@ -23,6 +23,12 @@ internal class OverlayViewController {
 
     private val animator = OverlayViewAnimator()
 
+    /**
+     * Показывает уведомление.
+     * @param activity активность, к которой будет приаттачена View с уведомлением
+     * @param notification объект уведомления
+     * @param animation true если необходимо показать уведомление с анимацией, false иначе
+     */
     fun show(activity: Activity, notification: SabycomNotification, animation: Boolean = true) {
         val binder = notification.inAppBinder ?: throw IllegalStateException()
         activity.tryGetRootView().postOnLayout {
@@ -43,6 +49,12 @@ internal class OverlayViewController {
         }
     }
 
+    /**
+     * Скрывает уведомление.
+     * @param activity активность, из иерархии которой будет удалена View с уведомлением
+     * @param tag тэг уведомления, под которым оно было опубликовано
+     * @param animation true если необходимо скрыть уведомление с анимацией, false иначе
+     */
     fun hide(activity: Activity, tag: String, animation: Boolean = true) {
         activity.getRootView()?.apply {
             findViewWithTag<View>(tag)?.let { target ->
@@ -65,6 +77,10 @@ internal class OverlayViewController {
         }
     }
 
+    /**
+     * Скрывает все уведомления.
+     * @param activity активность, из иерархии которой будут удалены все View с уведомлениями
+     */
     fun hideAll(activity: Activity) {
         activity.getRootView()?.apply {
             removeAllViews()
