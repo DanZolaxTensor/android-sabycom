@@ -181,7 +181,7 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
         val drawables = arrayOf(GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             setColor(Color.WHITE)
-            cornerRadius = 40f
+            cornerRadius = resources.getDimension(R.dimen.sabycom_notification_chat_corner_radius)
         }, with(TypedValue()) {
             context.theme.resolveAttribute(
                 R.attr.selectableItemBackground, this, true
