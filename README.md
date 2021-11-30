@@ -28,7 +28,7 @@ class MyApp : Application() {
     }
 }
  ```
-2. В зависимости от того, есть в вашем приложении авторизация или нет, зарегистрируйте пользователя или анонимного пользователя. 
+2. В зависимости от того, есть в вашем приложении авторизация или нет, зарегистрируйте пользователя или авторизуйте анонимно. 
 
  ```kotlin
 class MyActivity : AppCompatActivity() {
@@ -60,15 +60,16 @@ class MyActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("PrefName", MODE_PRIVATE)
         var userIdString = sharedPreferences.getString("UserIdKey",null)
         if (userIdString == null){
+            userIdString = UUID.randomUUID().toString()
+            // edit is extensions from androidx
             sharedPreferences.edit { 
-                userIdString = UUID.randomUUID().toString()
                 putString("UserIdKey",userIdString)
             }
         }
         return requireNotNull(UUID.fromString(userIdString))
     }
 ```
-4. Чтобы показать виджет, вызовите в вашей фрагменте Sabycom.show(activity). Чтобы скрыть виджет, вызовите Sabycom.hide().
+4. Чтобы показать виджет, вызовите в вашей фрагменте `Sabycom.show(activity)`. Чтобы скрыть виджет, вызовите `Sabycom.hide()`.
 
  ```kotlin
 class DemoFragment : Fragment() {
@@ -88,19 +89,15 @@ class DemoFragment : Fragment() {
 }
  ```
 
-5. Для получения количества непрочитанных сообщений подпишитесь на обновления четчика с ппомощью метода unreadConversationCount() с коллбеком который будет вызван при каждом изменении счетчика.
+5. Для получения количества непрочитанных сообщений подпишитесь на обновления счетчика с помощью метода `unreadConversationCount()` с коллбеком который будет вызван при каждом изменении счетчика.
 
 ```kotlin
-class DemoViewModel() : AndroidViewModel() {
+class DemoViewModel : ViewModel() {
     private val messageCounterLiveData = MutableLiveData(0)
     val messageCounter: LiveData<Int> = messageCounterLiveData
 
     init {
-        Sabycom.unreadConversationCount(object : UnreadCounterCallback {
-            override fun updateCount(count: Int) {
-                messageCounterLiveData.value = count
-            }
-        })
+        Sabycom.unreadConversationCount { count -> messageCounterLiveData.value = count }
     }
 
 }
