@@ -44,7 +44,7 @@ internal class OverlayViewController {
                     binder.bind(view, notification.data)
                 }
             } else {
-                Log.d("ViewController", "View detached, skip") // TODO message
+                Log.d("OverlayViewController", "View is detached, showing notification will be skipped")
             }
         }
     }

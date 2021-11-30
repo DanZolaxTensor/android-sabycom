@@ -79,7 +79,10 @@ internal class PushNotificationCenter(
                 }
             }
         } else {
-            Log.d("SKIP","SKIP")
+            Log.d(
+                "PushNotificationCenter",
+                "Push notification received for different users or the current user is null, addresseeId: ${message.addresseeId}"
+            )
         }
     }
 
@@ -105,7 +108,7 @@ internal class PushNotificationCenter(
     }
 
     private fun initNotificationChannels() {
-        NotificationChannelUtil.submitDefaultNotificationChannel(context, "САБИДОК") // TODO name
+        NotificationChannelUtil.submitDefaultNotificationChannel(context, "Sabycom") // TODO name https://online.sbis.ru/opendoc.html?guid=31a7f99e-60c1-4168-b904-bb150f0e75f5
     }
 
     private fun initPushBuilders() {

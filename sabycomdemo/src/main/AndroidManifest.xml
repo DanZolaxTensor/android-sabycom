@@ -25,6 +25,13 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <meta-data
+            android:name="ru.tensor.sabycom.push.notification_icon"
+            android:resource="@drawable/sabycom_demo_notification_icon"/>
+        <meta-data
+            android:name="ru.tensor.sabycom.push.notification_color"
+            android:resource="@color/color_primary"/>
     </application>
 
 </manifest>
