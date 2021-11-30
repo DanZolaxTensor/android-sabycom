@@ -49,7 +49,6 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
     private val closeOverlapHeight: Int
 
     init {
-        setWillNotDraw(false)
         contentLayout = LayoutInflater.from(context)
             .inflate(R.layout.sabycom_notification_chat_content_layout, this, false).apply {
                 (layoutParams as? LayoutParams)?.gravity =
