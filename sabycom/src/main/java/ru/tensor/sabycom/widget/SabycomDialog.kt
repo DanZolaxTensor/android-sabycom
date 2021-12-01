@@ -20,6 +20,7 @@ import ru.tensor.sabycom.R
 import ru.tensor.sabycom.Sabycom
 import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.databinding.SabycomDialogBinding
+import ru.tensor.sabycom.push.util.attachNotificationLocker
 import ru.tensor.sabycom.widget.js.JSInterface
 
 
@@ -46,6 +47,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        attachNotificationLocker(Sabycom.notificationLocker)
         with(requireArguments()) {
             url = getString(ARG_URL)!!
             userData = getParcelable(ARG_USER_DATA)!!
@@ -55,7 +57,8 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         bottomSheetDialog.setOnShowListener { dialog: DialogInterface ->
-            val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(R.id.design_bottom_sheet)
+            val bottomSheet =
+                (dialog as BottomSheetDialog).findViewById<FrameLayout>(R.id.design_bottom_sheet)
             bottomSheet?.let { it ->
                 val behaviour = BottomSheetBehavior.from(it)
                 it.updateLayoutParams<CoordinatorLayout.LayoutParams> {
@@ -63,13 +66,18 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
                 }
                 behaviour.state = BottomSheetBehavior.STATE_EXPANDED
             }
-            val bottomSheetBehavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet as View)
+            val bottomSheetBehavior: BottomSheetBehavior<*> =
+                BottomSheetBehavior.from(bottomSheet as View)
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
         }
         return bottomSheetDialog
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // TODO: 17.09.2021 перейти на использование WindowInsets 
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 

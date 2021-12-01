@@ -24,22 +24,24 @@ internal class Repository(
         localRepository.saveApiKey(apiKey)
     }
 
-    fun getUserData() = requireNotNull(localRepository.getUserData()) { NOT_INIT_ERROR }
+    fun getUserData() = localRepository.getUserData()
 
-    fun getApiKey() = requireNotNull(localRepository.getApiKey()) { NOT_INIT_ERROR }
+    fun requireUserData() = requireNotNull(localRepository.getUserData()) { NOT_INIT_ERROR }
+
+    fun requireApiKey() = requireNotNull(localRepository.getApiKey()) { NOT_INIT_ERROR }
 
     fun syncUserData() {
         remoteRepository.performRegisterSync(
-            getApiKey(),
-            getUserData(),
+            requireApiKey(),
+            requireUserData(),
             localRepository.getPushToken()
         )
     }
 
     fun getUnreadMessageCount(callback: (Int) -> Unit) {
         remoteRepository.getUnreadMessageCount(
-            getApiKey(),
-            getUserData(),
+            requireApiKey(),
+            requireUserData(),
             callback
         )
     }

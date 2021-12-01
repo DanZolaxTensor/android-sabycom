@@ -3,6 +3,7 @@
     package="ru.tensor.sabycom">
     <!--Разрешение для доступа в интернет, необходимо для загрузки веб виджета "мобильный консультант"-->
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application>
         <activity
             android:name="ru.tensor.sabycom.widget.SabycomActivity"
@@ -10,4 +11,5 @@
             android:launchMode="singleTask"
             android:theme="@style/SabycomTransparentActivityTheme" />
     </application>
+
 </manifest>

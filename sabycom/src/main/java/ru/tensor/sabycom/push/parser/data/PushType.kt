@@ -1,10 +1,12 @@
 package ru.tensor.sabycom.push.parser.data
 
 /**
+ * Типы поддерживаемых пуш-уведомлений по событиям виджета СБИС онлайн консультант.
+ *
  * @author am.boldinov
  */
 internal enum class PushType(val value: Int) {
-    MESSAGE(1),
+    CHAT(1),
     UNKNOWN(-1);
 
     companion object {

@@ -8,6 +8,8 @@ import ru.tensor.sabycom.push.parser.data.PushType
 import java.lang.Exception
 
 /**
+ * Реализация парсера пуш-уведомлений по событиям виджета СБИС онлайн консультант.
+ *
  * @author am.boldinov
  */
 internal class SabycomPushNotificationParser : PushNotificationParser {
@@ -20,19 +22,19 @@ internal class SabycomPushNotificationParser : PushNotificationParser {
         try {
             val system = JSONObject(payload.get(KeyContract.SYSTEM))
             val type = payload.get(KeyContract.TYPE).toInt()
+            val action = payload.get(KeyContract.ACTION).toInt()
             return PushNotificationMessage(
                 payload.get(KeyContract.MESSAGE_ID),
                 system.getString("title"),
                 system.getString("body"),
                 PushType.fromValue(type),
-               // payload.get(KeyContract.TIMESTAMP).toLong(), TODO 01.10.21
-                0L,
+                payload.get(KeyContract.TIMESTAMP).toLong(),
                 payload.get(KeyContract.ADDRESSEE_ID),
-                PushCloudAction.NOTIFY,
-                JSONObject()
+                PushCloudAction.fromValue(action),
+                JSONObject(payload.get(KeyContract.DATA))
             )
         } catch (e: Exception) {
-            throw UnknownPushNotificationTypeException()
+            throw UnknownPushNotificationTypeException(throwable = e)
         }
     }
 
@@ -50,11 +52,12 @@ internal class SabycomPushNotificationParser : PushNotificationParser {
     }
 
     private enum class KeyContract(val key: String) {
-        MESSAGE_ID("message_id"),
+        MESSAGE_ID("id"),
         ACTION("action"),
         ADDRESSEE_ID("addresseeId"),
         SYSTEM("system"),
         TYPE("type"),
-        TIMESTAMP("timestamp")
+        TIMESTAMP("timestamp"),
+        DATA("data")
     }
 }

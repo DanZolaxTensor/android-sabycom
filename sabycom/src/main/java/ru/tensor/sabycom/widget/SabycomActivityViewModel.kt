@@ -22,10 +22,10 @@ internal class SabycomActivityViewModel(repository: Repository = Sabycom.reposit
     init {
         openEventLiveData.value = OpenWidgetData(
             UrlUtil.buildWidgetUrl(
-                userId = repository.getUserData().id.toString(),
-                apiKey = repository.getApiKey()
+                userId = repository.requireUserData().id.toString(),
+                apiKey = repository.requireApiKey()
             ),
-            repository.getUserData()
+            repository.requireUserData()
         )
         Sabycom.sabycomFeature?.onClose = {
             hide()
