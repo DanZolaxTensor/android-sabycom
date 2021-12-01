@@ -47,7 +47,7 @@ internal class SabycomRemoteRepository : RemoteRepository {
                 put("email", userData.email)
                 put("phone", userData.phone)
                 put("push_token", token)
-                put("push_os", "android")
+                put("push_os", "android_fcm")
             }
             val path = "externalUser/${userData.id}/$apiKey"
             ApiClient.put(
