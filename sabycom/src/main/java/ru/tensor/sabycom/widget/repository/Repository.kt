@@ -12,7 +12,7 @@ internal class Repository(
 ) {
     fun sendPushToken(token: String) {
         localRepository.savePushToken(token)
-        if (localRepository.getUserData() != null) {
+        if (getUserData() != null) {
             syncUserData()
         }
     }
@@ -26,9 +26,9 @@ internal class Repository(
         localRepository.saveApiKey(apiKey)
     }
 
-    fun getUserData() = requireNotNull(localRepository.getUserData()) { USER_NOT_REGISTER_ERROR }
+    fun getUserData() = localRepository.getUserData()
 
-    fun requireUserData() = requireNotNull(localRepository.getUserData()) { NOT_INIT_ERROR }
+    fun requireUserData() = requireNotNull(localRepository.getUserData()) { USER_NOT_REGISTER_ERROR }
 
     fun requireApiKey() = requireNotNull(localRepository.getApiKey()) { NOT_INIT_ERROR }
 

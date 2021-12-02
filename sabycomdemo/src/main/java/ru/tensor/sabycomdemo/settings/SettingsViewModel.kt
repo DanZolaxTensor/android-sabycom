@@ -41,7 +41,7 @@ internal class SettingsViewModel(application: Application) : AndroidViewModel(ap
 
     init {
         appId = sharedPreferences.getString(APP_ID_KEY, null) ?: DEFAULT_APP_ID
-        host = getHostId(sharedPreferences.getString(CURRENT_HOST_KEY, null) ?: "prod")
+        host = getHostId(sharedPreferences.getString(CURRENT_HOST_KEY, null) ?: "PROD")
     }
 
     fun startWithData() {

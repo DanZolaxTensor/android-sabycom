@@ -87,7 +87,7 @@ object Sabycom : SabycomPushService {
      * Рузультаты будут доставленны в MainThread.
      * @param callback обработчик изменения количества непрочитанных сообщений.
      */
-    fun unreadConversationCount(callback: UnreadCounterCallback) {
+    fun unreadConversationCount(callback: UnreadCounterCallback?) {
         countController.callback = callback
     }
 

@@ -16,11 +16,11 @@ class DemoViewModel : ViewModel() {
     val messageCounter: LiveData<Int> = messageCounterLiveData
 
     init {
-        Sabycom.unreadConversationCount(object : UnreadCounterCallback {
-            override fun updateCount(count: Int) {
-                messageCounterLiveData.value = count
-            }
-        })
+        Sabycom.unreadConversationCount { count -> messageCounterLiveData.value = count }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Sabycom.unreadConversationCount(null)
+    }
 }
