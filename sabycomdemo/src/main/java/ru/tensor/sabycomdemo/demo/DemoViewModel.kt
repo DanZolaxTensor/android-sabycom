@@ -12,11 +12,11 @@ import ru.tensor.sabycom.widget.counter.UnreadCounterCallback
  * @author ma.kolpakov
  */
 class DemoViewModel : ViewModel() {
-    private val messageCounterLiveData = MutableLiveData(0)
-    val messageCounter: LiveData<Int> = messageCounterLiveData
+    private val _messageCounter = MutableLiveData(0)
+    val messageCounter: LiveData<Int> = _messageCounter
 
     init {
-        Sabycom.unreadConversationCount { count -> messageCounterLiveData.value = count }
+        Sabycom.unreadConversationCount { count -> _messageCounter.value = count }
     }
 
     override fun onCleared() {
