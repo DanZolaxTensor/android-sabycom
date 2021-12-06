@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.tensor.sabycom.Sabycom
-import ru.tensor.sabycom.widget.counter.UnreadCounterCallback
 
 /**
- * Вью модель экрана с демонстрацией виджета "оналйн консультант"
+ * Вью модель экрана с демонстрацией виджета "онлайн консультант"
  *
  * @author ma.kolpakov
  */
