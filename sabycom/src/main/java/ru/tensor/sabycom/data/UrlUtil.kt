@@ -10,8 +10,9 @@ import kotlin.jvm.Throws
  * @author am.boldinov
  */
 internal object UrlUtil {
-
-    const val HOST_URL = "https://pre-test-consultant.sbis.ru" // TODO 29.09.2021 настраиваемый gradle url
+    internal var currentHost: Host = Host.PRE_TEST
+    private const val HOST_URL_TEMPLATE = "https://%sconsultant.sbis.ru" // TODO 29.09.2021 настраиваемый gradle url
+    val HOST_URL: String get() = HOST_URL_TEMPLATE.format(currentHost.prefix)
 
     fun buildWidgetUrl(userId: String, apiKey: String): String {
         val params = JSONObject().apply {
@@ -37,4 +38,11 @@ internal object UrlUtil {
         return URLEncoder.encode(base64String, Charsets.UTF_8.displayName())
     }
 
+    enum class Host(val prefix: String) {
+        PROD(""),
+        FIX("fix-"),
+        TEST("test-"),
+        PRE_TEST("pre-test-"),
+        DEV("dev-"),
+    }
 }

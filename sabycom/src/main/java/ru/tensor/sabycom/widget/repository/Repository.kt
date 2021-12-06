@@ -12,7 +12,9 @@ internal class Repository(
 ) {
     fun sendPushToken(token: String) {
         localRepository.savePushToken(token)
-        syncUserData()
+        if (getUserData() != null) {
+            syncUserData()
+        }
     }
 
     fun registerUser(userData: UserData) {
@@ -26,11 +28,11 @@ internal class Repository(
 
     fun getUserData() = localRepository.getUserData()
 
-    fun requireUserData() = requireNotNull(localRepository.getUserData()) { NOT_INIT_ERROR }
+    fun requireUserData() = requireNotNull(localRepository.getUserData()) { USER_NOT_REGISTER_ERROR }
 
     fun requireApiKey() = requireNotNull(localRepository.getApiKey()) { NOT_INIT_ERROR }
 
-    fun syncUserData() {
+    private fun syncUserData() {
         remoteRepository.performRegisterSync(
             requireApiKey(),
             requireUserData(),
@@ -46,4 +48,8 @@ internal class Repository(
         )
     }
 
+    private companion object {
+        private const val USER_NOT_REGISTER_ERROR = "Before using Sabycom, it is necessary to register a user " +
+                "Sabycom.registerUser(userData: UserData) or Sabycom.registerAnonymousUser()"
+    }
 }

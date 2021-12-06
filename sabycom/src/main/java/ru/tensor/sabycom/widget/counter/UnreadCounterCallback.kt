@@ -9,7 +9,7 @@ import androidx.annotation.MainThread
  */
 
 @MainThread
-interface UnreadCounterCallback {
+fun interface UnreadCounterCallback {
     /**@SelfDocumented**/
     fun updateCount(count: Int)
 }
