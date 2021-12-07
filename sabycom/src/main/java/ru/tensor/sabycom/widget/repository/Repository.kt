@@ -40,6 +40,14 @@ internal class Repository(
         )
     }
 
+    fun registerAnonymousUserId(id: String?) {
+        localRepository.saveAnonymousUserId(id)
+    }
+
+    fun getAnonymousUserId(): String? {
+        return localRepository.getAnonymousUserId()
+    }
+
     fun getUnreadMessageCount(callback: (Int) -> Unit) {
         remoteRepository.getUnreadMessageCount(
             requireApiKey(),
