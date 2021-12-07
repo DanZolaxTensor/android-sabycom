@@ -12,4 +12,6 @@ internal interface LocalRepository {
     fun saveApiKey(apiKey: String)
     fun getApiKey(): String?
     fun getUserData(): UserData?
+    fun saveAnonymousUserId(id: String?)
+    fun getAnonymousUserId(): String?
 }

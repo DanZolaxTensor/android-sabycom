@@ -39,6 +39,14 @@ internal class SabycomLocalRepository(context: Context) : LocalRepository {
         )
     }
 
+    override fun saveAnonymousUserId(id: String?) {
+        sharedPreferences.edit().apply {
+            putString(ANONYMOUS_USER_ID_KEY, id)
+        }.apply()
+    }
+
+    override fun getAnonymousUserId() = sharedPreferences.getString(ANONYMOUS_USER_ID_KEY, null)
+
     override fun saveApiKey(apiKey: String) {
         sharedPreferences.edit().apply {
             putString(API_KEY_KEY, apiKey)
@@ -56,6 +64,7 @@ internal class SabycomLocalRepository(context: Context) : LocalRepository {
         private const val USER_DATA_SURNAME_KEY = "USER_DATA_SURNAME"
         private const val USER_DATA_EMAIL_KEY = "USER_DATA_EMAIL"
         private const val USER_DATA_PHONE_KEY = "USER_DATA_PHONE"
+        private const val ANONYMOUS_USER_ID_KEY = "ANONYMOUS_USER_ID_KEY"
     }
 }
 

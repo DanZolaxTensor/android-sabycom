@@ -3,6 +3,7 @@ package ru.tensor.sabycom.widget
 import androidx.appcompat.app.AppCompatActivity
 import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.widget.repository.Repository
+import java.util.*
 
 /**
  * @author ma.kolpakov
@@ -27,5 +28,17 @@ internal class SabycomFeature(
 
     fun registerUser(userData: UserData) {
         repository.registerUser(userData)
+        repository.registerAnonymousUserId(null)
+    }
+
+    fun registerAnonymousUser() {
+        var anonymousUserId = repository.getAnonymousUserId()
+        if (anonymousUserId == null) {
+            val newId = UUID.randomUUID()
+            anonymousUserId = newId.toString()
+            repository.registerAnonymousUserId(anonymousUserId)
+        }
+
+        registerUser(UserData(UUID.fromString(anonymousUserId)))
     }
 }

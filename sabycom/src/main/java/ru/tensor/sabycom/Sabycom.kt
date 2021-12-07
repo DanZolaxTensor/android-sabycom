@@ -61,10 +61,10 @@ object Sabycom : SabycomPushService {
 
     }
     /**
-     * Зарегестрировать анонимного пользователя
+     * Зарегистрировать анонимного пользователя
      */
     fun registerAnonymousUser() {
-        // TODO: 29.11.2021 реализовать https://online.sbis.ru/opendoc.html?guid=4e12592d-954b-4a92-88dc-d02b156961e6
+        checkNotNull(sabycomFeature) { NOT_INIT_ERROR }.registerAnonymousUser()
     }
 
     /**
@@ -83,8 +83,8 @@ object Sabycom : SabycomPushService {
     }
 
     /**
-     * Зарегестрировать обработчик изсенения количества непрочитанных соощений.
-     * Рузультаты будут доставленны в MainThread.
+     * Зарегистрировать обработчик изменения количества непрочитанных сообщений.
+     * Результаты будут доставлены в MainThread.
      * @param callback обработчик изменения количества непрочитанных сообщений.
      */
     fun unreadConversationCount(callback: UnreadCounterCallback?) {
