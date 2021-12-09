@@ -65,6 +65,7 @@ object Sabycom : SabycomPushService {
      */
     fun registerAnonymousUser() {
         checkNotNull(sabycomFeature) { NOT_INIT_ERROR }.registerAnonymousUser()
+        countController.requestCount()
     }
 
     /**

@@ -39,6 +39,6 @@ internal class SabycomFeature(
             repository.registerAnonymousUserId(anonymousUserId)
         }
 
-        registerUser(UserData(UUID.fromString(anonymousUserId)))
+        repository.registerUser(UserData(UUID.fromString(anonymousUserId)))
     }
 }
