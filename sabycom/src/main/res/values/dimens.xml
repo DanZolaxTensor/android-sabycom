@@ -2,7 +2,8 @@
 <resources>
     <!-- Chat Notification -->
     <dimen name="sabycom_notification_chat_content_width">300dp</dimen>
-    <dimen name="sabycom_notification_chat_content_elevation">40dp</dimen>
+    <dimen name="sabycom_notification_chat_content_elevation">12dp</dimen>
+    <dimen name="sabycom_notification_chat_content_padding">40dp</dimen>
     <dimen name="sabycom_notification_chat_corner_radius">12dp</dimen>
     <dimen name="sabycom_notification_chat_avatar_size">48dp</dimen>
     <dimen name="sabycom_notification_chat_counter_corner_radius">52dp</dimen>

@@ -69,7 +69,7 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
             closeOverlapWidth = (drawable.intrinsicWidth * CLOSE_OVERLAP_WIDTH_FACTOR).toInt()
             closeOverlapHeight = (drawable.intrinsicHeight * CLOSE_OVERLAP_HEIGHT_FACTOR).toInt()
         }
-        setPadding(contentLayout.elevation.toInt())
+        setPadding(resources.getDimensionPixelSize(R.dimen.sabycom_notification_chat_content_padding))
         addView(contentLayout)
         addView(closeView)
     }
