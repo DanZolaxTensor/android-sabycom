@@ -35,7 +35,7 @@ internal object NotificationChannelUtil {
                 DEFAULT_NOTIFICATION_CHANNEL_ID,
                 name,
                 NotificationManager.IMPORTANCE_HIGH
-            )
+            ).apply { setShowBadge(false) }
         }
     }
 
