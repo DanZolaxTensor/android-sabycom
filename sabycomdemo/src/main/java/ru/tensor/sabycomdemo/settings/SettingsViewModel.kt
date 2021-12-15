@@ -41,7 +41,7 @@ internal class SettingsViewModel(application: Application) : AndroidViewModel(ap
     var phone = MutableLiveData<String>()
     var email = MutableLiveData<String>()
     var appId = MutableLiveData(sharedPreferences.getString(APP_ID_KEY, null) ?: DEFAULT_APP_ID)
-    var host = MutableLiveData(getHostId(sharedPreferences.getString(CURRENT_HOST_KEY, null) ?: "PROD"))
+    var host = MutableLiveData(getHostId(sharedPreferences.getString(CURRENT_HOST_KEY, null) ?: getHostName(0)))
 
     @Suppress("UNUSED_PARAMETER")
     fun startWithData(view: View) {
@@ -76,7 +76,7 @@ internal class SettingsViewModel(application: Application) : AndroidViewModel(ap
     @Suppress("UNUSED_PARAMETER")
     fun restart(view: View) {
         sharedPreferences.edit(true) {
-            putString(CURRENT_HOST_KEY, getHostName(host.value ?: 0))
+            putString(CURRENT_HOST_KEY, getHostName(host.value!!))
             putString(APP_ID_KEY, appId.value)
         }
         _restart.value = Event(Unit)
@@ -98,7 +98,7 @@ internal class SettingsViewModel(application: Application) : AndroidViewModel(ap
                 putString(REGISTER_USER_ID_KEY, userIdString)
             }
         }
-        return requireNotNull(UUID.fromString(userIdString))
+        return UUID.fromString(userIdString)
     }
 
     private fun getHostName(id: Int) = getApplication<Application>().resources.getStringArray(R.array.hosts)[id]
