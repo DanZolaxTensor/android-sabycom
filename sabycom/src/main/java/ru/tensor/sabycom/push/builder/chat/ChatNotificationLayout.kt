@@ -123,8 +123,10 @@ internal class ChatNotificationLayout @JvmOverloads constructor(
                 .setRetainImageOnFailure(true)
                 .build()
             avatarView.controller = controller
+            avatarView.isVisible = true
         } ?: run {
             avatarView.setImageURI(null as Uri?, null)
+            avatarView.isVisible = false
         }
     }
 
