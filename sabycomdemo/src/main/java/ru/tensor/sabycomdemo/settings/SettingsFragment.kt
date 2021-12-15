@@ -32,6 +32,7 @@ internal class SettingsFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.settings_fragment, null, false)
         binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()

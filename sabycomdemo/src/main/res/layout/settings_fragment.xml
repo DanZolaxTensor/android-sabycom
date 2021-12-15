@@ -20,12 +20,11 @@
             android:layout_marginStart="@dimen/settings_margin"
             android:layout_marginTop="@dimen/settings_margin"
             android:layout_marginEnd="@dimen/settings_margin"
-            android:afterTextChanged="@{e -> viewModel.setName(e.toString())}"
             android:autofillHints="name"
             android:ems="10"
             android:hint="@string/hint_name"
             android:inputType="textPersonName"
-            android:text="@{viewModel.name}"
+            android:text="@={viewModel.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -36,11 +35,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/settings_margin"
             android:layout_marginEnd="@dimen/settings_margin"
-            android:afterTextChanged="@{e -> viewModel.setSurname(e.toString())}"
             android:autofillHints="name"
             android:hint="@string/hint_surname"
             android:inputType="textPersonName"
-            android:text="@{viewModel.surname}"
+            android:text="@={viewModel.surname}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name"/>
@@ -51,12 +49,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/settings_margin"
             android:layout_marginEnd="@dimen/settings_margin"
-            android:afterTextChanged="@{e -> viewModel.setPhone(e.toString())}"
             android:autofillHints="phone"
             android:ems="10"
             android:hint="@string/hint_phone"
             android:inputType="phone"
-            android:text="@{viewModel.phone}"
+            android:text="@={viewModel.phone}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/surname"/>
@@ -67,12 +64,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/settings_margin"
             android:layout_marginEnd="@dimen/settings_margin"
-            android:afterTextChanged="@{e -> viewModel.setEmail(e.toString())}"
             android:autofillHints="emailAddress"
             android:ems="10"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
-            android:text="@{viewModel.email}"
+            android:text="@={viewModel.email}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/phone"/>
@@ -90,16 +86,29 @@
             app:layout_constraintTop_toBottomOf="@id/email"/>
 
         <Button
+            android:id="@+id/reset_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/settings_margin"
+            android:layout_marginEnd="@dimen/settings_margin"
+            android:onClick="@{viewModel::resetRegisterUser}"
+            android:text="@string/reset_user"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/start_button"/>
+
+        <Button
             android:id="@+id/anonymous_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/settings_big_margin"
             android:layout_marginStart="@dimen/settings_margin"
             android:layout_marginEnd="@dimen/settings_margin"
             android:onClick="@{viewModel::startAnonymous}"
             android:text="@string/start_anonymous_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/start_button"/>
+            app:layout_constraintTop_toBottomOf="@id/reset_user"/>
 
 
         <EditText
@@ -107,11 +116,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/settings_big_margin"
-            android:afterTextChanged="@{e -> viewModel.setAppId(e.toString())}"
             android:autofillHints="none"
             android:hint="@string/hint_app_id"
             android:inputType="text"
-            android:text="@{viewModel.appId}"
+            android:text="@={viewModel.appId}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/anonymous_button"/>
@@ -123,8 +131,7 @@
             android:layout_marginStart="@dimen/settings_big_margin"
             android:layout_marginEnd="@dimen/settings_big_margin"
             android:entries="@array/hosts"
-            android:onItemSelected="@{(parent,view,pos,id) -> viewModel.setHost(pos)}"
-            android:selectedItemPosition="@{viewModel.host}"
+            android:selectedItemPosition="@={viewModel.host}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/app_id"/>

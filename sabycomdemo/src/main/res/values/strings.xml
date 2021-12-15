@@ -6,6 +6,7 @@
     <string name="hint_phone">Телефон</string>
     <string name="hint_email">Email</string>
     <string name="start_button">Начать</string>
+    <string name="reset_user">Удалить пользователя</string>
     <string name="start_anonymous_button">Анонимный пользователь</string>
     <string name="restart_app">Перезапустить</string>
 
