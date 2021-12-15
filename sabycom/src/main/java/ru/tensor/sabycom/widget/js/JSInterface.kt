@@ -3,9 +3,9 @@ package ru.tensor.sabycom.widget.js
 import android.util.Log
 import android.webkit.JavascriptInterface
 import androidx.annotation.WorkerThread
+import org.json.JSONException
 import org.json.JSONObject
 import ru.tensor.sabycom.widget.counter.IUnreadCountController
-import java.lang.Exception
 
 /**
  * Интерфейс взаимодействия с JS кодом веб виджета. Обрабатывает события от виджета.
@@ -35,8 +35,8 @@ internal class JSInterface(
                         .getJSONObject(VALUE)
                         .getJSONObject(SCROLL_DATA_KEY)
                         .getBoolean(SCROLLED_OT_TOP_KEY)
-                    onContentScrollListener.onScrollChange(value)
-                } catch (e: Exception) {
+                    onContentScrollListener.onScrollChange(!value)
+                } catch (e: JSONException) {
                     Log.d(LOG_TAG, "Invalid scrolling data", e)
                 }
             }
@@ -63,7 +63,11 @@ internal class JSInterface(
     }
 
     fun interface OnContentScrollListener {
+        /**
+         *  Вызывается при изменении скролла в вебвью.
+         *  @param isContentScrolling  признак того скролится ли в данный момент контент.
+         */
         @WorkerThread
-        fun onScrollChange(isScrollToTop: Boolean)
+        fun onScrollChange(isContentScrolling: Boolean)
     }
 }

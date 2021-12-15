@@ -76,8 +76,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
                         }
                     }
 
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    }
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
                 })
 
                 behaviour.state = BottomSheetBehavior.STATE_EXPANDED
@@ -124,7 +123,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
                     viewModel.hide()
                 }
             }, {
-                isContentScrolling = !it
+                isContentScrolling = it
             }),
             "mobileParent"
         )
