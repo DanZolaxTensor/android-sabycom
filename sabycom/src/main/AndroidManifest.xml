@@ -3,6 +3,8 @@
     package="ru.tensor.sabycom">
     <!--Разрешение для доступа в интернет, необходимо для загрузки веб виджета "мобильный консультант"-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--Разрешение для скачивания файлов из виджета "мобильный консультант" -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application>
         <activity
