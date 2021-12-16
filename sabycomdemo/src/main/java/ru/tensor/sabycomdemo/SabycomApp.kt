@@ -32,5 +32,6 @@ class SabycomApp : Application() {
         const val CURRENT_HOST_KEY = "CURRENT_HOST_KEY"
         const val APP_ID_KEY = "APP_ID_KEY"
         const val DEFAULT_APP_ID = "4553e85c-344d-48bf-86b9-4db74f44fca8"
+        const val REGISTER_USER_ID_KEY = "REGISTER_USER_ID_KEY"
     }
 }
