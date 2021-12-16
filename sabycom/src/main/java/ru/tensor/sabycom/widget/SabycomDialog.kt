@@ -23,7 +23,6 @@ import ru.tensor.sabycom.databinding.SabycomDialogBinding
 import ru.tensor.sabycom.push.util.attachNotificationLocker
 import ru.tensor.sabycom.widget.js.JSInterface
 
-
 /**
  * @author ma.kolpakov
  */
@@ -32,6 +31,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     private lateinit var url: String
     private lateinit var userData: UserData
     private val viewModel: SabycomActivityViewModel by activityViewModels()
+    private var isContentScrolling = true
 
     companion object {
         fun newInstance(url: String, userData: UserData): SabycomDialog {
@@ -65,11 +65,23 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
                 it.updateLayoutParams<CoordinatorLayout.LayoutParams> {
                     height = CoordinatorLayout.LayoutParams.MATCH_PARENT
                 }
+
+                behaviour.addBottomSheetCallback(object :
+                    BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        if (newState == BottomSheetBehavior.STATE_DRAGGING && isContentScrolling) {
+                            behaviour.setState(BottomSheetBehavior.STATE_EXPANDED)
+                        } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                            dismiss()
+                        }
+                    }
+
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+                })
+
                 behaviour.state = BottomSheetBehavior.STATE_EXPANDED
             }
-            val bottomSheetBehavior: BottomSheetBehavior<*> =
-                BottomSheetBehavior.from(bottomSheet as View)
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+
         }
         return bottomSheetDialog
     }
@@ -106,11 +118,13 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     private fun prepareWebView(webView: WebView): WebView {
         webView.addJavascriptInterface(
-            JSInterface(Sabycom.countController) {
+            JSInterface(Sabycom.countController, {
                 requireActivity().runOnUiThread {
                     viewModel.hide()
                 }
-            },
+            }, {
+                isContentScrolling = it
+            }),
             "mobileParent"
         )
 
