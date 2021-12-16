@@ -13,6 +13,7 @@ import ru.tensor.sabycomdemo.R
 import ru.tensor.sabycomdemo.SabycomApp.Companion.APP_ID_KEY
 import ru.tensor.sabycomdemo.SabycomApp.Companion.CURRENT_HOST_KEY
 import ru.tensor.sabycomdemo.SabycomApp.Companion.DEFAULT_APP_ID
+import ru.tensor.sabycomdemo.SabycomApp.Companion.REGISTER_USER_ID_KEY
 import ru.tensor.sabycomdemo.SabycomApp.Companion.SABYCOM_HOST_PREFS
 import java.util.*
 
@@ -35,26 +36,32 @@ internal class SettingsViewModel(application: Application) : AndroidViewModel(ap
     private val _restart = MutableLiveData<Event<Unit>>()
     val restart: LiveData<Event<Unit>> = _restart
 
-    //Не используются LiveDate так как нет внешнего иточника данных
-    var name: String = ""
-    var surname: String = ""
-    var phone: String = ""
-    var email: String = ""
-    var appId: String = ""
-    var host: Int = 0
-
-    init {
-        appId = sharedPreferences.getString(APP_ID_KEY, null) ?: DEFAULT_APP_ID
-        host = getHostId(sharedPreferences.getString(CURRENT_HOST_KEY, null) ?: "PROD")
-    }
+    var name = MutableLiveData<String>()
+    var surname = MutableLiveData<String>()
+    var phone = MutableLiveData<String>()
+    var email = MutableLiveData<String>()
+    var appId = MutableLiveData(sharedPreferences.getString(APP_ID_KEY, null) ?: DEFAULT_APP_ID)
+    var host = MutableLiveData(getHostId(sharedPreferences.getString(CURRENT_HOST_KEY, null) ?: getHostName(0)))
 
     @Suppress("UNUSED_PARAMETER")
     fun startWithData(view: View) {
         if (!validateData()) return
 
-        Sabycom.registerUser(UserData(UUID.randomUUID(), name, surname, email, phone))
+        Sabycom.registerUser(UserData(getUserId(), name.value, surname.value, email.value, phone.value))
 
         _showDemo.value = Event(Unit)
+    }
+
+    @Suppress("UNUSED_PARAMETER")
+    fun resetRegisterUser(view: View) {
+        sharedPreferences.edit {
+            putString(REGISTER_USER_ID_KEY, null)
+        }
+
+        name.value = ""
+        surname.value = ""
+        email.value = ""
+        phone.value = ""
     }
 
     @Suppress("UNUSED_PARAMETER")
@@ -69,18 +76,29 @@ internal class SettingsViewModel(application: Application) : AndroidViewModel(ap
     @Suppress("UNUSED_PARAMETER")
     fun restart(view: View) {
         sharedPreferences.edit(true) {
-            putString(CURRENT_HOST_KEY, getHostName(host))
-            putString(APP_ID_KEY, appId)
+            putString(CURRENT_HOST_KEY, getHostName(host.value!!))
+            putString(APP_ID_KEY, appId.value)
         }
         _restart.value = Event(Unit)
     }
 
     private fun validateData(): Boolean {
-        appId.ifEmpty {
+        if (appId.value.isNullOrEmpty()) {
             _errorMessage.value = getApplication<Application>().getString(R.string.no_app_id_error)
             return false
         }
         return true
+    }
+
+    private fun getUserId(): UUID {
+        var userIdString = sharedPreferences.getString(REGISTER_USER_ID_KEY, null)
+        if (userIdString == null) {
+            userIdString = UUID.randomUUID().toString()
+            sharedPreferences.edit {
+                putString(REGISTER_USER_ID_KEY, userIdString)
+            }
+        }
+        return UUID.fromString(userIdString)
     }
 
     private fun getHostName(id: Int) = getApplication<Application>().resources.getStringArray(R.array.hosts)[id]
