@@ -2,6 +2,8 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-parcelize'
+    id 'maven-publish'
+    id 'signing'
 }
 
 android {
@@ -56,4 +58,49 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
+
+def publishingLogin = System.getenv("SONATYPE_LOGIN")
+def publishingPassword = System.getenv("SONATYPE_")
+
+def publishingGroupId = 'ru.tensor.sabycom'
+def publishingArtifactId = 'sabycom'
+def publishingVersionCode = System.getenv("VERSION_CODE") ?: "21.6219"
+
+
+afterEvaluate {
+    publishing {
+        publications {
+
+            release(MavenPublication) {
+                from components.release
+
+                groupId = publishingGroupId
+                artifactId = publishingArtifactId
+                version = publishingVersionCode
+
+                repositories {
+                    maven {
+                        url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                        credentials {
+                            username publishingLogin
+                            password publishingPassword
+                        }
+                    }
+                }
+
+            }
+            debug(MavenPublication) {
+                from components.debug
+
+                groupId = publishingGroupId
+                artifactId = publishingArtifactId
+                version = publishingVersionCode
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.release
+    }
 }
