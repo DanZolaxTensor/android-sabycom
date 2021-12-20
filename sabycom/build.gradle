@@ -100,13 +100,13 @@ afterEvaluate {
         }
     }
     signing {
-		def signingKeyId = findProperty("signingKeyId")
-		println(signingKeyId)
+		//def signingKeyId = findProperty("signingKeyId")
+		//println(signingKeyId)
 		def signingKey = findProperty("signingKey")
 		println(signingKey)
 		def signingPassword = findProperty("signingPassword")
 		println(signingPassword)
-		useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+		useInMemoryPgpKeys(signingKey, signingPassword)
         sign publishing.publications.release
     }
 }
