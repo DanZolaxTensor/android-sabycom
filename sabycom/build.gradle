@@ -61,11 +61,11 @@ dependencies {
 }
 
 def publishingLogin = System.getenv("SONATYPE_LOGIN")
-def publishingPassword = System.getenv("SONATYPE_")
+def publishingPassword = System.getenv("SONATYPE_PASSWORD")
 
 def publishingGroupId = 'ru.tensor.sabycom'
 def publishingArtifactId = 'sabycom'
-def publishingVersionCode = System.getenv("VERSION_CODE") ?: "21.6219"
+def publishingVersionCode = System.getenv("VERSION") ?: "21.6219"
 
 
 afterEvaluate {
@@ -99,8 +99,8 @@ afterEvaluate {
             }
         }
     }
-
     signing {
+        useInMemoryPgpKeys(findProperty("signingKey"), findProperty("signingPassword"))
         sign publishing.publications.release
     }
 }
