@@ -121,6 +121,10 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
         super.onDestroyView()
     }
 
+    /**
+     * Требуется для отправки файлов с помощью AdvancedWebView
+     * https://github.com/delight-im/Android-AdvancedWebView#with-fragments-from-the-support-library-androidsupportv4appfragment
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
         webView?.onActivityResult(requestCode, resultCode, intent)
