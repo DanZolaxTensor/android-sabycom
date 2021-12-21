@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.updateLayoutParams
@@ -22,16 +21,21 @@ import ru.tensor.sabycom.data.UserData
 import ru.tensor.sabycom.databinding.SabycomDialogBinding
 import ru.tensor.sabycom.push.util.attachNotificationLocker
 import ru.tensor.sabycom.widget.js.JSInterface
+import android.content.Intent
+import im.delight.android.webview.AdvancedWebView
+import ru.tensor.sabycom.widget.webview.WebViewFileLoader
+
 
 /**
  * @author ma.kolpakov
  */
 internal class SabycomDialog : BottomSheetDialogFragment() {
-    private lateinit var binding: SabycomDialogBinding
+    private var webView: AdvancedWebView? = null
     private lateinit var url: String
     private lateinit var userData: UserData
     private val viewModel: SabycomActivityViewModel by activityViewModels()
     private var isContentScrolling = true
+    private lateinit var webViewFileLoader: WebViewFileLoader
 
     companion object {
         fun newInstance(url: String, userData: UserData): SabycomDialog {
@@ -53,6 +57,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
             url = getString(ARG_URL)!!
             userData = getParcelable(ARG_USER_DATA)!!
         }
+        webViewFileLoader = WebViewFileLoader(this)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -86,27 +91,43 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
         return bottomSheetDialog
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = SabycomDialogBinding.inflate(inflater)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val binding = SabycomDialogBinding.inflate(inflater)
 
         prepareWebView(binding.webView)
 
-        binding.webView.loadUrl(url, createHeaders(userData))
+        binding.webView.loadUrl(url)
+
+        webView = binding.webView
 
         return binding.root
     }
 
-    private fun createHeaders(userData: UserData): MutableMap<String, String> {
-        val headers = mutableMapOf("id" to userData.id.toString())
-        headers.putIfNotNull("name", userData.name)
-        headers.putIfNotNull("surname", userData.surname)
-        headers.putIfNotNull("email", userData.email)
-        headers.putIfNotNull("phone", userData.phone)
-        return headers
+    @SuppressLint("NewApi")
+    override fun onResume() {
+        super.onResume()
+        webView?.onResume()
+    }
+
+    @SuppressLint("NewApi")
+    override fun onPause() {
+        webView?.onPause()
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        webView?.onDestroy()
+        webView = null
+        super.onDestroyView()
+    }
+
+    /**
+     * Требуется для отправки файлов с помощью AdvancedWebView
+     * https://github.com/delight-im/Android-AdvancedWebView#with-fragments-from-the-support-library-androidsupportv4appfragment
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
+        webView?.onActivityResult(requestCode, resultCode, intent)
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -116,7 +137,10 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
 
     // Можно использовать JavaScript так как мы загружаем только наш веб-виджет
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
-    private fun prepareWebView(webView: WebView): WebView {
+    private fun prepareWebView(webView: AdvancedWebView) {
+        webView.setListener(requireActivity(), webViewFileLoader)
+        webView.settings.javaScriptEnabled = true
+        webView.settings.javaScriptCanOpenWindowsAutomatically = true
         webView.addJavascriptInterface(
             JSInterface(Sabycom.countController, {
                 requireActivity().runOnUiThread {
@@ -127,13 +151,6 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
             }),
             "mobileParent"
         )
-
-        webView.settings.javaScriptEnabled = true
-        return webView
-    }
-
-    private fun MutableMap<String, String>.putIfNotNull(key: String, value: String?) {
-        if (value != null) this[key] = value
     }
 }
 
