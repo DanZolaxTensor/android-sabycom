@@ -60,13 +60,23 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
-def publishingLogin = System.getenv("SONATYPE_LOGIN")
-def publishingPassword = System.getenv("SONATYPE_PASSWORD")
-
 def publishingGroupId = 'ru.tensor.sabycom'
 def publishingArtifactId = 'sabycom'
 def publishingVersionCode = System.getenv("VERSION") ?: "21.6219"
 
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    // Read local.properties file first if it exists
+    Properties p = new Properties()
+    new FileInputStream(secretPropsFile).withCloseable { is -> p.load(is) }
+    p.each { name, value -> rootProject.ext[name] = value }
+} else {
+    rootProject.ext["ossrhUsername"] = System.getenv('SONATYPE_LOGIN')
+    rootProject.ext["ossrhPassword"] = System.getenv('SONATYPE_PASSWORD')
+    rootProject.ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
+    rootProject.ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
+    rootProject.ext["signing.key"] = System.getenv('SIGNING_KEY')
+}
 
 afterEvaluate {
     publishing {
@@ -83,8 +93,8 @@ afterEvaluate {
                     maven {
                         url "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
                         credentials {
-                            username publishingLogin
-                            password publishingPassword
+                            username rootProject.ext["ossrhUsername"]
+                            password rootProject.ext["ossrhPassword"]
                         }
                     }
                 }
@@ -100,13 +110,11 @@ afterEvaluate {
         }
     }
     signing {
-        def signingKeyId = findProperty("signingKeyId")
-        println(signingKeyId)
-        def signingKey = findProperty("signingKey")
-        println(signingKey)
-        def signingPassword = findProperty("signingPassword")
-        println(signingPassword)
-        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+        useInMemoryPgpKeys(
+                rootProject.ext["signing.keyId"],
+                rootProject.ext["signing.key"],
+                rootProject.ext["signing.password"]
+        )
         sign publishing.publications.release
     }
 }
