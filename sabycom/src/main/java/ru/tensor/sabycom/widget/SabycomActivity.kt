@@ -26,6 +26,11 @@ internal class SabycomActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        supportFragmentManager.findFragmentByTag(SABYCOM_DIALOG_FRAGMENT_TAG)?.onActivityResult(requestCode, resultCode, data)
+    }
+
     internal companion object {
         /**
          * Метод предоставляет интент для открытия активити с виджетом онлайн консультации
