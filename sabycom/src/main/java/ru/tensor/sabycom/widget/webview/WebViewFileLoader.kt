@@ -11,43 +11,44 @@ import android.webkit.CookieManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import im.delight.android.webview.AdvancedWebView
 
 /**
  * @author ma.kolpakov
  */
-internal class WebViewFileLoader(private val contextProvider: () -> Context?) : AdvancedWebView.Listener,
+internal class WebViewFileLoader(private val fragment: Fragment) : AdvancedWebView.Listener,
     ActivityResultCallback<Boolean> {
 
     private var fileUrl: String? = null
-    private var fileName: String? = null
-    var permissionLauncher: ActivityResultLauncher<String>?=null
+    private lateinit var fileName: String
+    var permissionLauncher: ActivityResultLauncher<String> =
+        fragment.registerForActivityResult(ActivityResultContracts.RequestPermission(), this)
 
     override fun onDownloadRequested(
-        url: String?,
-        suggestedFilename: String?,
+        url: String,
+        suggestedFilename: String,
         mimeType: String?,
         contentLength: Long,
         contentDisposition: String?,
         userAgent: String?
     ) {
-        contextProvider.invoke()?.let { context ->
-            if (!checkPermission(context)) {
-                permissionLauncher?.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            } else {
-                downloadFile(context, url, suggestedFilename)
-            }
+        fileUrl = url
+        fileName = suggestedFilename
+        if (!checkPermission(fragment.requireContext())) {
+            permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        } else {
+            downloadFile(fragment.requireContext(), url, suggestedFilename)
         }
     }
 
     override fun onActivityResult(isGranted: Boolean) {
-        contextProvider.invoke()?.let { context ->
-            if (isGranted || checkPermission(context)) {
-                downloadFile(context, fileUrl, fileName)
-            } else {
-                Toast.makeText(context, "No permission to save file", Toast.LENGTH_SHORT).show()
-            }
+        if (isGranted || checkPermission(fragment.requireContext())) {
+            downloadFile(fragment.requireContext(), fileUrl, fileName)
+        } else {
+            Toast.makeText(fragment.requireContext(), "No permission to save file", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -70,7 +71,7 @@ internal class WebViewFileLoader(private val contextProvider: () -> Context?) : 
     /**
      * Запускает загрузку файла через DOWNLOAD_SERVICE
      */
-    private fun downloadFile(context: Context, url: String?, suggestedFilename: String?) {
+    private fun downloadFile(context: Context, url: String?, suggestedFilename: String) {
         if (url.isNullOrEmpty()) return
 
         val request = DownloadManager.Request(Uri.parse(url))
