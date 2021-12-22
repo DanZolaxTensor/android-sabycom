@@ -19,7 +19,8 @@ import im.delight.android.webview.AdvancedWebView
 /**
  * @author ma.kolpakov
  */
-internal class WebViewFileLoader(private val fragment: Fragment) : AdvancedWebView.Listener,
+internal class WebViewInteractor(private val fragment: Fragment, val onErrorCallback: () -> Unit) :
+    AdvancedWebView.Listener,
     ActivityResultCallback<Boolean> {
 
     private var fileUrl: String? = null
@@ -56,7 +57,7 @@ internal class WebViewFileLoader(private val fragment: Fragment) : AdvancedWebVi
 
     override fun onPageFinished(url: String?) = Unit
 
-    override fun onPageError(errorCode: Int, description: String?, failingUrl: String?) = Unit
+    override fun onPageError(errorCode: Int, description: String?, failingUrl: String?) = onErrorCallback()
 
     override fun onExternalPageRequest(url: String?) = Unit
 
