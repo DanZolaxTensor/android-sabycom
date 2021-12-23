@@ -130,7 +130,7 @@ afterEvaluate {
                         }
                         developer {
                             id = 'du.bykov'
-                            name = 'Dmitrii Bykov'
+                            name = 'Dmitry Bykov'
                             email = 'du.bykov@tensor.ru'
                         }
                     }
