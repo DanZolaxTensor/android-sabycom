@@ -63,7 +63,7 @@ dependencies {
 
 def publishingGroupId = 'ru.tensor.sabycom'
 def publishingArtifactId = 'sabycom'
-def publishingVersionCode = System.getenv("VERSION") ?: "21.6219"
+def publishingVersionCode = System.getenv("VERSION") ?: "21.6219.03"
 
 File secretPropsFile = project.rootProject.file('local.properties')
 if (secretPropsFile.exists()) {
@@ -99,7 +99,42 @@ afterEvaluate {
                         }
                     }
                 }
+                pom {
+                    name = publishingArtifactId
+                    description = 'Library for creating an online support chat'
+                    url = 'https://github.com/saby/android-sabycom'
 
+                    scm {
+                        connection = 'https://github.com/saby/android-sabycom'
+                        developerConnection = 'git@github.com:saby/android-sabycom.git'
+                        url = 'https://tensor.ru/'
+                    }
+
+                    licenses {
+                        license {
+                            name = 'MIT'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'ma.kolpakov'
+                            name = 'Mikhail Kolpakov'
+                            email = 'ma.kolpakov@tensor.ru'
+                        }
+                        developer {
+                            id = 'am.boldinov'
+                            name = 'Aleksey Boldinov'
+                            email = 'am.boldinov@tensor.ru'
+                        }
+                        developer {
+                            id = 'du.bykov'
+                            name = 'Dmitrii Bykov'
+                            email = 'du.bykov@tensor.ru'
+                        }
+                    }
+                }
             }
             debug(MavenPublication) {
                 from components.debug
