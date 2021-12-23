@@ -19,7 +19,7 @@ dependencies {
 
 ## Использование SDK
 
-#### Установка виджета
+### Установка виджета
 
 1. В вашем классе приложения в методе onCreate сконфигурируйте Sabycom, передав в качестве параметра идентификатор приложения.
 ```kotlin
@@ -105,7 +105,7 @@ class DemoViewModel : ViewModel() {
 }
 ```
 
-#### Подписка на уведомления
+### Подписка на уведомления
 
 1. Интегрируйте в ваш проект [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging/android/client).
 2. Для подписки на уведомления получите токен от `FirebaseMessaging` и передайте его в Sabycom с помощью метода `Sabycom.sendToken(token)`.
