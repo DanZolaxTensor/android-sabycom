@@ -2,12 +2,12 @@
 Быков Д. Ю. / Виджет чата поддержки для мобильных приложений
 
 ### Подключение
-Для подключения SDK в фале build.gradle вашего модуля в секции dependencies необходимо добавить зависимость "ru.tensor.sabycom:1.0.0":
+Для подключения SDK в фале build.gradle вашего модуля в секции dependencies необходимо добавить зависимость implementation 'ru.tensor.sabycom:sabycom:21.6219.63':
 
 ```groovy
 dependencies {
 //...
-    implementation "ru.tensor.sabycom:1.0.0"
+    implementation 'ru.tensor.sabycom:sabycom:21.6219.63'
 //...
 }
 ```
