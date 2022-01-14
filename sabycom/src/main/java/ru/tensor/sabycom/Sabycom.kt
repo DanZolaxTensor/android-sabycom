@@ -60,12 +60,20 @@ object Sabycom : SabycomPushService {
         countController.requestCount()
 
     }
+
     /**
      * Зарегистрировать анонимного пользователя
      */
     fun registerAnonymousUser() {
         checkNotNull(sabycomFeature) { NOT_INIT_ERROR }.registerAnonymousUser()
         countController.requestCount()
+    }
+
+    /**
+     * Зарегистрировать анонимного пользователя
+     */
+    fun logout() {
+        repository.unregisterUser()
     }
 
     /**

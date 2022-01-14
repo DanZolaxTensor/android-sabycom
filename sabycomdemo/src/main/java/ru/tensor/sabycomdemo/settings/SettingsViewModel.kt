@@ -62,6 +62,8 @@ internal class SettingsViewModel(application: Application) : AndroidViewModel(ap
         surname.value = ""
         email.value = ""
         phone.value = ""
+
+        Sabycom.logout()
     }
 
     @Suppress("UNUSED_PARAMETER")

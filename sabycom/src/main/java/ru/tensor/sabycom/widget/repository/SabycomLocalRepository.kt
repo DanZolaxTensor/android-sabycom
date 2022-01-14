@@ -18,13 +18,21 @@ internal class SabycomLocalRepository(context: Context) : LocalRepository {
 
     override fun getPushToken() = sharedPreferences.getString(TOKEN_KEY, null)
 
-    override fun saveUser(user: UserData) {
+    override fun saveUser(user: UserData?) {
         sharedPreferences.edit().apply {
-            putString(USER_DATA_ID_KEY, user.id.toString())
-            putString(USER_DATA_NAME_KEY, user.name)
-            putString(USER_DATA_SURNAME_KEY, user.surname)
-            putString(USER_DATA_EMAIL_KEY, user.email)
-            putString(USER_DATA_PHONE_KEY, user.phone)
+            if (user == null) {
+                remove(USER_DATA_ID_KEY)
+                remove(USER_DATA_NAME_KEY)
+                remove(USER_DATA_SURNAME_KEY)
+                remove(USER_DATA_EMAIL_KEY)
+                remove(USER_DATA_PHONE_KEY)
+            } else {
+                putString(USER_DATA_ID_KEY, user.id.toString())
+                putString(USER_DATA_NAME_KEY, user.name)
+                putString(USER_DATA_SURNAME_KEY, user.surname)
+                putString(USER_DATA_EMAIL_KEY, user.email)
+                putString(USER_DATA_PHONE_KEY, user.phone)
+            }
         }.apply()
     }
 

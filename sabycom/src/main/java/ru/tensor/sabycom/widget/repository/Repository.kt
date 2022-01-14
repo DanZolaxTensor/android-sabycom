@@ -56,6 +56,16 @@ internal class Repository(
         )
     }
 
+    fun unregisterUser() {
+        remoteRepository.performRegisterSync(
+            requireApiKey(),
+            requireUserData(),
+            localRepository.getPushToken(),
+            true
+        )
+        localRepository.saveUser(null)
+    }
+
     private companion object {
         private const val USER_NOT_REGISTER_ERROR = "Before using Sabycom, it is necessary to register a user " +
                 "Sabycom.registerUser(userData: UserData) or Sabycom.registerAnonymousUser()"
