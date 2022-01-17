@@ -174,3 +174,8 @@ internal class YourPushMessagingService : FirebaseMessagingService() {
     android:name="ru.tensor.sabycom.push.notification_color"
     android:resource="@color/your_notification_color"/>
 ```
+
+7. Чтобы удалить информацию о пользователе и отписаться от уведомлений, вызовите функцию
+```kotlin
+Sabycom.logout()
+```

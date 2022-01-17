@@ -8,7 +8,7 @@ import ru.tensor.sabycom.data.UserData
 internal interface LocalRepository {
     fun savePushToken(token: String)
     fun getPushToken(): String?
-    fun saveUser(user: UserData)
+    fun saveUser(user: UserData?)
     fun saveApiKey(apiKey: String)
     fun getApiKey(): String?
     fun getUserData(): UserData?
