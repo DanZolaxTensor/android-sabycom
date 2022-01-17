@@ -70,7 +70,7 @@ object Sabycom : SabycomPushService {
     }
 
     /**
-     * Зарегистрировать анонимного пользователя
+     * Удалить текущего авторизованного пользователя и отписаться от пуш уведомлений
      */
     fun logout() {
         repository.unregisterUser()
