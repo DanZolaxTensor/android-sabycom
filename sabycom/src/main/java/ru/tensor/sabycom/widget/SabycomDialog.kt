@@ -24,6 +24,8 @@ import ru.tensor.sabycom.widget.js.JSInterface
 import android.content.Intent
 import im.delight.android.webview.AdvancedWebView
 import ru.tensor.sabycom.widget.webview.WebViewInteractor
+import android.webkit.*
+import ru.tensor.sabycom.BuildConfig
 
 
 /**
@@ -32,18 +34,22 @@ import ru.tensor.sabycom.widget.webview.WebViewInteractor
 internal class SabycomDialog : BottomSheetDialogFragment() {
     private var binding: SabycomDialogBinding? = null
     private lateinit var url: String
+    private lateinit var channel: String
     private lateinit var userData: UserData
     private val viewModel: SabycomActivityViewModel by activityViewModels()
     private var isContentScrolling = true
     private lateinit var webViewInteractor: WebViewInteractor
 
+
     companion object {
-        fun newInstance(url: String, userData: UserData): SabycomDialog {
+        fun newInstance(url: String, userData: UserData, channel: String): SabycomDialog {
             return SabycomDialog().apply {
                 arguments = Bundle()
                 this.url = url
+                this.channel = channel
                 this.userData = userData
                 requireArguments().putString(ARG_URL, url)
+                requireArguments().putString(ARG_CHANNEL, channel)
                 requireArguments().putParcelable(ARG_USER_DATA, userData)
             }
         }
@@ -55,6 +61,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
         attachNotificationLocker(Sabycom.notificationLocker)
         with(requireArguments()) {
             url = getString(ARG_URL)!!
+            channel = getString(ARG_CHANNEL)!!
             userData = getParcelable(ARG_USER_DATA)!!
         }
 
@@ -97,9 +104,25 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = SabycomDialogBinding.inflate(inflater).apply {
             prepareWebView(webView)
-            webView.loadUrl(url)
-        }
+            if (viewModel.isNetworkAvailable()) {
+                webView.loadUrl(url)
+            } else {
+                webView.loadUrl("$url#isOffline=true")
+            }
 
+            viewModel.internetAvailable.observe(viewLifecycleOwner) {
+                if (it) {
+                    webView.evaluateJavascript(getOfflineModeJs(false, channel)) {
+                        // not needed
+                    }
+                }
+            }
+
+            viewModel.pageReady.observe(viewLifecycleOwner) {
+                progressBar.visibility = View.GONE
+                webView.visibility = View.VISIBLE
+            }
+        }
         return binding!!.root
     }
 
@@ -147,20 +170,35 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface")
     private fun prepareWebView(webView: AdvancedWebView) {
         webView.setListener(requireActivity(), webViewInteractor)
-        webView.settings.javaScriptEnabled = true
-        webView.settings.javaScriptCanOpenWindowsAutomatically = true
+        with(webView.settings) {
+            javaScriptEnabled = true
+            javaScriptCanOpenWindowsAutomatically = true
+            allowFileAccess = true
+            cacheMode =
+                if (viewModel.isNetworkAvailable()) WebSettings.LOAD_DEFAULT else WebSettings.LOAD_CACHE_ELSE_NETWORK
+        }
+
+        if (BuildConfig.DEBUG) {
+            WebView.setWebContentsDebuggingEnabled(true)
+        }
+
         webView.addJavascriptInterface(
             JSInterface(Sabycom.countController, {
-                requireActivity().runOnUiThread {
-                    viewModel.hide()
-                }
+                viewModel.hide()
             }, {
                 isContentScrolling = it
+            }, {
+                viewModel.showWebView()
             }),
             "mobileParent"
         )
     }
+
+    private fun getOfflineModeJs(isOffline: Boolean, channel: String): String {
+        return "window.postMessage('{\"action\":\"setOfflineMode\",\"value\":{\"isOffline\":$isOffline},\"channel\":\"$channel\", \"windowId\":\"chat\"}');"
+    }
 }
 
 private const val ARG_URL = "URL"
+private const val ARG_CHANNEL = "CHANNEL"
 private const val ARG_USER_DATA = "USER_DATA"

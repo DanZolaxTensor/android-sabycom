@@ -10,14 +10,16 @@ import androidx.appcompat.app.AppCompatActivity
  * @author ma.kolpakov
  */
 internal class SabycomActivity : AppCompatActivity() {
-    private val viewModel: SabycomActivityViewModel by viewModels()
+    private val viewModel: SabycomActivityViewModel by viewModels {
+        SabycomActivityViewModelFactory(application)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel.openEvent.observe(this) { state ->
             if (supportFragmentManager.findFragmentByTag(SABYCOM_DIALOG_FRAGMENT_TAG) != null) return@observe
-            SabycomDialog.newInstance(state.url, state.userData)
+            SabycomDialog.newInstance(state.url, state.userData, state.channel)
                 .show(supportFragmentManager, SABYCOM_DIALOG_FRAGMENT_TAG)
         }
 
@@ -28,7 +30,8 @@ internal class SabycomActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        supportFragmentManager.findFragmentByTag(SABYCOM_DIALOG_FRAGMENT_TAG)?.onActivityResult(requestCode, resultCode, data)
+        supportFragmentManager.findFragmentByTag(SABYCOM_DIALOG_FRAGMENT_TAG)
+            ?.onActivityResult(requestCode, resultCode, data)
     }
 
     internal companion object {
