@@ -1,9 +1,12 @@
-package ru.tensor.sabycom.widget
+package ru.tensor.sabycom.widget.network
 
 import android.net.ConnectivityManager
 import android.net.Network
 
 /**
+ * Отслеживает состояние сети, так же публикует событие об изменении статуса сети в listener.
+ * Событие публикуется только в случае изменения сети, два одинаковых события не может быть.
+ *
  * @author ma.kolpakov
  */
 internal class NetworkWatcher(private val listener: (Boolean) -> Unit) : ConnectivityManager.NetworkCallback() {
@@ -15,7 +18,6 @@ internal class NetworkWatcher(private val listener: (Boolean) -> Unit) : Connect
             listener(true)
         }
         isAvailable = true
-        super.onAvailable(network)
     }
 
     override fun onLost(network: Network) {
@@ -23,6 +25,5 @@ internal class NetworkWatcher(private val listener: (Boolean) -> Unit) : Connect
             listener(false)
         }
         isAvailable = false
-        super.onLost(network)
     }
 }

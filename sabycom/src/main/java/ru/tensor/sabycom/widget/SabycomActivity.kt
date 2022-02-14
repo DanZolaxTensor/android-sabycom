@@ -10,9 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
  * @author ma.kolpakov
  */
 internal class SabycomActivity : AppCompatActivity() {
-    private val viewModel: SabycomActivityViewModel by viewModels {
-        SabycomActivityViewModelFactory(application)
-    }
+    private val viewModel: SabycomActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

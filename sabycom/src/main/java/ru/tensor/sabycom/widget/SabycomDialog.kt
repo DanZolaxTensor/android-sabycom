@@ -194,6 +194,9 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
         )
     }
 
+    /**
+     * Возвращает JavaScript который может отключить или включить офлайн мод в виджете
+     */
     private fun getOfflineModeJs(isOffline: Boolean, channel: String): String {
         return "window.postMessage('{\"action\":\"setOfflineMode\",\"value\":{\"isOffline\":$isOffline},\"channel\":\"$channel\", \"windowId\":\"chat\"}');"
     }
