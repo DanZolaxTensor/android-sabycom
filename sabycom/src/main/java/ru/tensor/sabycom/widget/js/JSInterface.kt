@@ -14,7 +14,8 @@ import ru.tensor.sabycom.widget.counter.IUnreadCountController
 internal class JSInterface(
     private val countController: IUnreadCountController,
     private val onCloseListener: OnJsCloseListener,
-    private val onContentScrollListener: OnContentScrollListener
+    private val onContentScrollListener: OnContentScrollListener,
+    private val onRegisterWindowListener: OnRegisterWindowListener
 ) {
 
     @JavascriptInterface
@@ -28,6 +29,10 @@ internal class JSInterface(
             // Изменение непрочитанных сообщений
             ACTION_UPDATE_UNREAD_MESSAGES -> {
                 countController.updateCount(dataJson.getInt(VALUE))
+            }
+            // Страница полностью загрузилась
+            REGISTER_WINDOW -> {
+                onRegisterWindowListener.onRegisterWindow()
             }
             ACTION_SCROLL_CHANGED -> {
                 try {
@@ -48,6 +53,7 @@ internal class JSInterface(
 
     private companion object {
         const val ACTION_CLOSE = "toggleWindow"
+        const val REGISTER_WINDOW = "registerWindow"
         const val ACTION_SCROLL_CHANGED = "scrollChanged"
         const val ACTION_UPDATE_UNREAD_MESSAGES = "unreadChange"
         const val ACTION = "action"
@@ -69,5 +75,13 @@ internal class JSInterface(
          */
         @WorkerThread
         fun onScrollChange(isContentScrolling: Boolean)
+    }
+
+    fun interface OnRegisterWindowListener {
+        /**
+         *  Вызывается при полной прогрузке страницы.
+         */
+        @WorkerThread
+        fun onRegisterWindow()
     }
 }
