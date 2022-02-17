@@ -19,7 +19,7 @@ import im.delight.android.webview.AdvancedWebView
 /**
  * @author ma.kolpakov
  */
-internal class WebViewInteractor(private val fragment: Fragment, val onErrorCallback: () -> Unit) :
+internal class WebViewInteractor(private val fragment: Fragment, val onErrorCallback: () -> Unit, val onPageFinished: () -> Unit) :
     AdvancedWebView.Listener,
     ActivityResultCallback<Boolean> {
 
@@ -55,7 +55,7 @@ internal class WebViewInteractor(private val fragment: Fragment, val onErrorCall
 
     override fun onPageStarted(url: String?, favicon: Bitmap?) = Unit
 
-    override fun onPageFinished(url: String?) = Unit
+    override fun onPageFinished(url: String?) = onPageFinished()
 
     override fun onPageError(errorCode: Int, description: String?, failingUrl: String?) = onErrorCallback()
 
