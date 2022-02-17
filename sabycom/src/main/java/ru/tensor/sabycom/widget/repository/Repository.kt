@@ -57,12 +57,15 @@ internal class Repository(
     }
 
     fun unregisterUser() {
-        remoteRepository.performRegisterSync(
-            requireApiKey(),
-            requireUserData(),
-            localRepository.getPushToken(),
-            true
-        )
+        val userData = getUserData()
+        userData?.let {
+            remoteRepository.performRegisterSync(
+                requireApiKey(),
+                it,
+                localRepository.getPushToken(),
+                true
+            )
+        }
         localRepository.saveUser(null)
     }
 
