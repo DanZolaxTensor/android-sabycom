@@ -65,9 +65,11 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
             userData = getParcelable(ARG_USER_DATA)!!
         }
 
-        webViewInteractor = WebViewInteractor(this) {
+        webViewInteractor = WebViewInteractor(this, {
             showError()
-        }
+        }, {
+            viewModel.showWebView()
+        })
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -160,6 +162,7 @@ internal class SabycomDialog : BottomSheetDialogFragment() {
         binding?.apply {
             webView.visibility = View.GONE
             errorMessage.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
             isContentScrolling = false
         }
     }
