@@ -49,7 +49,7 @@ internal class WebViewInteractor(private val fragment: Fragment, val onErrorCall
         if (isGranted || checkPermission(fragment.requireContext())) {
             downloadFile(fragment.requireContext(), fileUrl, fileName)
         } else {
-            Toast.makeText(fragment.requireContext(), "No permission to save file", Toast.LENGTH_SHORT).show()
+            Toast.makeText(fragment.requireContext(), "Нет разрешения на сохранение файла", Toast.LENGTH_SHORT).show()
         }
     }
 
