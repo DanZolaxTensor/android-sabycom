@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import im.delight.android.webview.AdvancedWebView
+import ru.tensor.sabycom.R
 
 /**
  * @author ma.kolpakov
@@ -49,7 +50,7 @@ internal class WebViewInteractor(private val fragment: Fragment, val onErrorCall
         if (isGranted || checkPermission(fragment.requireContext())) {
             downloadFile(fragment.requireContext(), fileUrl, fileName)
         } else {
-            Toast.makeText(fragment.requireContext(), "Нет разрешения на сохранение файла", Toast.LENGTH_SHORT).show()
+            Toast.makeText(fragment.requireContext(), fragment.requireContext().getString(R.string.sabycom_no_file_save_permission), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -79,7 +80,7 @@ internal class WebViewInteractor(private val fragment: Fragment, val onErrorCall
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, suggestedFilename)
 
-        request.addRequestHeader("cookie", CookieManager.getInstance().getCookie(url))
+        request.addRequestHeader(context.getString(R.string.sabycom_cookie), CookieManager.getInstance().getCookie(url))
 
         val dm = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         dm.enqueue(request)
